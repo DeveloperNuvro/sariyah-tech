@@ -7,7 +7,7 @@ import { Toaster } from 'react-hot-toast'; // For user feedback
 // Page Imports
 import HomePage from './pages/Home';
 import CourseDetailPage from './pages/CourseDetail';
-import LoginPage from './pages/auth/loginPage';
+import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/Register';
 import CheckoutPage from './pages/student/CheckoutPage';
 import StudentDashboard from './pages/student/StudentDashboard';
