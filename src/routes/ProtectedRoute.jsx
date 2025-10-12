@@ -77,3 +77,6 @@ export const InstructorRoute = ({ children }) => (
 export const AdminRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={['admin']}>{children}</ProtectedRoute>
 );
+
+// Export the base ProtectedRoute component for general use
+export { ProtectedRoute };

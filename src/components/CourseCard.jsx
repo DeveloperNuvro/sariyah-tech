@@ -46,12 +46,28 @@ export const CourseCard = ({ course }) => {
                     <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                             <Avatar className="h-6 w-6">
-                                <AvatarImage src={course.instructor?.avatarUrl} />
-                                <AvatarFallback>{instructorInitials}</AvatarFallback>
+                                <AvatarImage src={course.instructor?.avatar || course.instructor?.avatarUrl} />
+                                <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white text-xs font-semibold">
+                                    {instructorInitials}
+                                </AvatarFallback>
                             </Avatar>
-                            <span className="truncate">{course.instructor?.name}</span>
+                            <span className="truncate text-sm font-medium">{course.instructor?.name || 'Unknown Instructor'}</span>
                         </div>
-                        <span className="font-bold text-lg text-foreground">${course.price}</span>
+                        <div className="text-right">
+                          {course.discountPrice && course.discountPrice < course.price ? (
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-lg text-foreground">৳{course.discountPrice}</span>
+                                <span className="text-sm text-muted-foreground line-through">৳{course.price}</span>
+                              </div>
+                              <div className="text-xs text-red-600 font-medium">
+                                Save ৳{course.price - course.discountPrice}
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="font-bold text-lg text-foreground">৳{course.price}</span>
+                          )}
+                        </div>
                     </div>
                 </CardFooter>
             </Card>

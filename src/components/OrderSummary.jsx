@@ -27,7 +27,7 @@ export const OrderSummary = ({ course }) => {
         <Separator />
         <div className="flex justify-between font-semibold">
           <span>Total</span>
-          <span>${price}</span>
+          <span>৳{price}</span>
         </div>
       </CardContent>
     </Card>

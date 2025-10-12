@@ -10,34 +10,34 @@
 /* 2. Define custom theme variables in the base layer. */
 @layer base {
   :root {
-    /* "SynthCore" Theme Variables (Dark Mode by Default) */
-    --background: 220.2 84% 4.9%;    /* Deep Space Blue */
-    --foreground: 210 40% 98%;
+    /* Vibrant Eye-Catching Theme */
+    --background: 0 0% 100%;         /* Pure White */
+    --foreground: 222.2 84% 4.9%;    /* Dark text */
 
-    --card: 222.2 84% 6.9%;          /* Slightly lighter card bg */
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;               /* White cards */
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 198 93% 60%;          /* Vibrant Cyan */
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 198 93% 60%;          /* Vibrant Cyan from logo */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 40% 98%;        /* Light gray */
+    --secondary-foreground: 222.2 84% 4.9%;
     
-    --accent: 310 89% 60%;           /* Pop of Magenta */
-    --accent-foreground: 210 40% 98%;
+    --accent: 310 89% 60%;           /* Magenta from logo */
+    --accent-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 40% 98%;            /* Very light gray */
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 198 93% 60%;             /* Vibrant Cyan for focus rings */
+    --border: 214.3 31.8% 91.4%;     /* Light border */
+    --input: 214.3 31.8% 91.4%;
+    --ring: 198 93% 60%;             /* Cyan for focus rings */
 
     --radius: 0.75rem;
   }
@@ -48,9 +48,34 @@
   * {
     border-color: hsl(var(--border));
   }
+  
+  /* Reset default margins and padding */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+  }
+  
+  #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+  }
+  
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
+    margin: 0;
+    padding: 0;
   }
 }

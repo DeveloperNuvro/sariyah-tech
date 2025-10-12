@@ -34,7 +34,24 @@ export const CourseSidebar = ({ course, isEnrolled, isOwner, isAuthenticated, us
           <img src={course.thumbnail} alt={course.title} className="w-full h-52 object-cover" />
         </CardHeader>
         <CardContent className="p-6">
-          <p className="text-3xl font-bold mb-4">${course.price}</p>
+          {/* Pricing Display */}
+          <div className="mb-4">
+            {course.discountPrice && course.discountPrice < course.price ? (
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl font-bold text-gray-900">৳{course.discountPrice}</span>
+                  <span className="text-lg text-gray-500 line-through">৳{course.price}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
+                    Save ৳{course.price - course.discountPrice}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <p className="text-3xl font-bold text-gray-900">৳{course.price}</p>
+            )}
+          </div>
           {renderActionButtons()}
           <div className="mt-6 space-y-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">

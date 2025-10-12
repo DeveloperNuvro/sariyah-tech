@@ -54,6 +54,23 @@ export const submitQuizAnswers = createAsyncThunk(
   }
 );
 
+// --- NEW THUNK: Fetch existing quiz result for a student ---
+export const fetchQuizResult = createAsyncThunk(
+  'quizzes/fetchResult',
+  async (lessonId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get(`/lessons/${lessonId}/quiz/result`);
+      return data.data; // This will be the existing result object
+    } catch (error) {
+      // It's okay if no result is found (404), student hasn't taken the quiz yet
+      if (error.response?.status === 404) {
+        return null;
+      }
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
 
 const quizSlice = createSlice({
   name: 'quizzes',
@@ -92,6 +109,19 @@ const quizSlice = createSlice({
         state.currentQuizResult = action.payload;
       })
       .addCase(submitQuizAnswers.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+
+      // Fetch Quiz Result
+      .addCase(fetchQuizResult.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchQuizResult.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.currentQuizResult = action.payload;
+      })
+      .addCase(fetchQuizResult.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

@@ -8,7 +8,10 @@ import progressReducer from '../features/progress/progressSlice';
 import quizReducer from '../features/quiz/quizSlice';
 import quizScoreReducer from '../features/quizScores/quizScoreSlice';
 import certificateReducer from '../features/certificates/certificateSlice'
-import categoryReducer from '../features/categories/categorySlice'; 
+import categoryReducer from '../features/categories/categorySlice';
+import adminReducer from '../features/admin/adminSlice';
+import reviewReducer from '../features/reviews/reviewSlice';
+import profileReducer from '../features/profile/profileSlice'; 
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +25,9 @@ export const store = configureStore({
     quizScores: quizScoreReducer,
     certificates: certificateReducer,
     categories: categoryReducer,
+    admin: adminReducer,
+    reviews: reviewReducer,
+    profile: profileReducer,
   },
   // Adding middleware is good practice for production, but not strictly needed for this setup to work
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

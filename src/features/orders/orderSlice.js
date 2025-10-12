@@ -15,8 +15,18 @@ export const createOrder = createAsyncThunk(
   'orders/create',
   async (orderData, { rejectWithValue }) => {
     try {
-      // orderData should contain { courseId, paymentMethod, paymentNumber }
-      const { data } = await api.post('/orders', orderData);
+      // Check if orderData is FormData (for file uploads)
+      const isFormData = orderData instanceof FormData;
+      
+      const config = {
+        headers: isFormData ? {
+          'Content-Type': 'multipart/form-data',
+        } : {
+          'Content-Type': 'application/json',
+        }
+      };
+      
+      const { data } = await api.post('/orders', orderData, config);
       return data.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message || 'Could not create order.');

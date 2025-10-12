@@ -90,6 +90,18 @@ export const deleteCourse = createAsyncThunk(
   }
 );
 
+export const updateCourse = createAsyncThunk(
+  'courses/update',
+  async ({ courseId, courseData }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put(`/courses/${courseId}`, courseData);
+      return data.data; // Return the updated course object
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to update course');
+    }
+  }
+);
+
 export const toggleCoursePublishStatus = createAsyncThunk(
   'courses/togglePublish',
   async (courseId, { rejectWithValue }) => {
@@ -111,6 +123,18 @@ export const toggleCourseEndedStatus = createAsyncThunk(
       return data; // Return the whole response to get the message
     } catch (error) {
       return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+export const recalculateCourseProgress = createAsyncThunk(
+  'courses/recalculateProgress',
+  async (courseId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(`/progress/recalculate/${courseId}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
     }
   }
 );
@@ -193,6 +217,18 @@ const courseSlice = createSlice({
       // Delete Course
       .addCase(deleteCourse.fulfilled, (state, action) => {
         state.instructorCourses = state.instructorCourses.filter(course => course._id !== action.payload);
+      })
+      // Update Course
+      .addCase(updateCourse.fulfilled, (state, action) => {
+        const index = state.instructorCourses.findIndex(course => course._id === action.payload._id);
+        if (index !== -1) {
+          state.instructorCourses[index] = action.payload;
+        }
+        // Also update in the main courses array if it exists
+        const courseIndex = state.courses.findIndex(course => course._id === action.payload._id);
+        if (courseIndex !== -1) {
+          state.courses[courseIndex] = action.payload;
+        }
       })
       .addCase(toggleCoursePublishStatus.fulfilled, (state, action) => {
         // Find the index of the course that was updated
