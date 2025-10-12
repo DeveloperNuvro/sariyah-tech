@@ -1,0 +1,56 @@
+/* src/index.css */
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+@import "tw-animate-css";
+/* 1. Standard Tailwind directives. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 2. Define custom theme variables in the base layer. */
+@layer base {
+  :root {
+    /* "SynthCore" Theme Variables (Dark Mode by Default) */
+    --background: 220.2 84% 4.9%;    /* Deep Space Blue */
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 6.9%;          /* Slightly lighter card bg */
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 198 93% 60%;          /* Vibrant Cyan */
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --accent: 310 89% 60%;           /* Pop of Magenta */
+    --accent-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 198 93% 60%;             /* Vibrant Cyan for focus rings */
+
+    --radius: 0.75rem;
+  }
+}
+ 
+/* 3. Apply base styles using raw CSS to avoid build errors. */
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
