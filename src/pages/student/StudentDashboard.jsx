@@ -144,7 +144,7 @@ const StudentDashboard = () => {
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col items-center justify-center text-center p-16 border-2 border-dashed border-gray-200/50 rounded-2xl bg-white/50 backdrop-blur-sm relative overflow-hidden"
+          className="flex flex-col items-center justify-center text-center p-16 border-2 border-dashed border-gray-200/50 rounded-2xl bg-white/50 backdrop-blur-sm relative overflow-hidden max-w-2xl w-full"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-pink-400/5"></div>
           <div className="relative z-10">
@@ -270,7 +270,7 @@ const StudentDashboard = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+                  className={`${myOrders.length === 0 ? 'flex justify-center' : 'grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'}`}
                 >
                   {renderContent()}
                 </motion.div>

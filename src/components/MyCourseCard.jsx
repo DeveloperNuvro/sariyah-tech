@@ -238,7 +238,7 @@ export const MyCourseCard = ({ order, enrollmentDetails, certificate }) => {
               <img 
                 src={order.course.thumbnail} 
                 alt={order.course.title} 
-                className="h-32 w-full sm:w-48 object-cover rounded-xl border border-gray-200/50 transition-transform duration-300 group-hover:scale-105" 
+                className="w-32 h-32 sm:w-48 sm:h-48 object-cover rounded-xl border border-gray-200/50 transition-transform duration-300 group-hover:scale-105" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>

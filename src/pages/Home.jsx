@@ -206,46 +206,78 @@ const ServicesSection = () => {
             title: "Web Development",
             description: "Modern, responsive websites and web applications using React, Next.js, and cutting-edge technologies.",
             features: ["Responsive Design", "SEO Optimized", "Fast Loading", "Modern UI/UX"],
-            color: "from-blue-500 to-cyan-500"
+            color: "from-blue-500 to-cyan-500",
+            bgGradient: "from-blue-50 to-cyan-50",
+            borderColor: "border-blue-200/50",
+            hoverBorder: "group-hover:border-blue-300/70"
         },
         {
             icon: Mobile,
             title: "Mobile App Development",
             description: "Native and cross-platform mobile applications for iOS and Android with seamless user experience.",
             features: ["iOS & Android", "Cross-Platform", "Native Performance", "App Store Ready"],
-            color: "from-purple-500 to-pink-500"
+            color: "from-purple-500 to-pink-500",
+            bgGradient: "from-purple-50 to-pink-50",
+            borderColor: "border-purple-200/50",
+            hoverBorder: "group-hover:border-purple-300/70"
         },
         {
             icon: Bot,
             title: "AI Agent Development",
             description: "Intelligent AI agents and automation solutions to streamline your business processes.",
             features: ["Chatbots", "Process Automation", "Machine Learning", "API Integration"],
-            color: "from-green-500 to-emerald-500"
+            color: "from-green-500 to-emerald-500",
+            bgGradient: "from-green-50 to-emerald-50",
+            borderColor: "border-green-200/50",
+            hoverBorder: "group-hover:border-green-300/70"
         },
         {
             icon: Database,
             title: "Custom Software",
             description: "Tailored software solutions designed specifically for your business needs and requirements.",
             features: ["Custom Solutions", "Scalable Architecture", "Database Design", "API Development"],
-            color: "from-orange-500 to-red-500"
+            color: "from-orange-500 to-red-500",
+            bgGradient: "from-orange-50 to-red-50",
+            borderColor: "border-orange-200/50",
+            hoverBorder: "group-hover:border-orange-300/70"
         }
     ];
 
     return (
-        <section className="py-20 lg:py-32 bg-gradient-to-br from-slate-50 via-white to-blue-50">
-            <div className="container px-4 max-w-7xl mx-auto">
+        <section className="py-20 lg:py-32 bg-gradient-to-br from-slate-50 via-white to-blue-50 relative overflow-hidden">
+            {/* Enhanced Background Elements */}
+            <div className="absolute inset-0">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-cyan-400/5 to-blue-500/5 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-pink-400/5 to-purple-500/5 rounded-full blur-3xl"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-yellow-400/3 to-orange-500/3 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="container px-4 max-w-7xl mx-auto relative z-10">
                 <motion.div 
-                    className="text-center mb-16"
+                    className="text-center mb-20"
                     initial="hidden"
                     whileInView="show"
                     viewport={{ once: true, amount: 0.5 }}
                     variants={animationVariants.fadeInUp}
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-gray-900">
-                        Our Development Services
+                    <motion.div
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-cyan-400/10 to-pink-400/10 border border-cyan-400/20 text-cyan-600 text-sm font-medium mb-6 shadow-lg backdrop-blur-sm"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <Rocket className="w-4 h-4 text-cyan-500" />
+                        Premium Development Services
+                    </motion.div>
+                    
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-gray-900">
+                        Our{' '}
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-pink-500 to-purple-500">
+                            Development Services
+                        </span>
                     </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        From concept to deployment, we deliver world-class software solutions that drive your business forward.
+                    <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        From concept to deployment, we deliver world-class software solutions that drive your business forward. 
+                        Our expert team combines cutting-edge technology with proven methodologies.
                     </p>
                 </motion.div>
 
@@ -262,35 +294,99 @@ const ServicesSection = () => {
                             <motion.div
                                 key={index}
                                 variants={animationVariants.fadeInUp}
+                                whileHover={{ y: -4 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
                             >
-                                <Card className="h-full bg-white/80 backdrop-blur-sm border border-gray-200/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group">
-                                    <CardHeader className="text-center pb-4 relative overflow-hidden">
-                                        <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
-                                        <div className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                                <Card className={`bg-gradient-to-br ${service.bgGradient} backdrop-blur-sm border-2 ${service.borderColor} ${service.hoverBorder} transition-all duration-300 group overflow-hidden relative`}>
+                                    
+                                    <CardHeader className="text-center pb-4 relative z-10 pt-6">
+                                        <motion.div 
+                                            className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center mx-auto mb-4 transition-all duration-300`}
+                                            whileHover={{ rotate: 5, scale: 1.05 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
                                             <Icon className="w-8 h-8 text-white" />
-                                        </div>
-                                        <CardTitle className="text-xl text-gray-900 relative z-10">{service.title}</CardTitle>
+                                        </motion.div>
+                                        <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors duration-300">
+                                            {service.title}
+                                        </CardTitle>
                                     </CardHeader>
-                                    <CardContent className="px-6">
-                                        <p className="text-gray-600 mb-4 text-center">{service.description}</p>
+                                    
+                                    <CardContent className="px-6 pb-4 relative z-10">
+                                        <p className="text-gray-600 mb-4 text-center leading-relaxed group-hover:text-gray-700 transition-colors duration-300 text-sm">
+                                            {service.description}
+                                        </p>
                                         <div className="space-y-2">
                                             {service.features.map((feature, i) => (
-                                                <div key={i} className="flex items-center gap-2 text-sm">
-                                                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                                                    <span className="text-gray-700">{feature}</span>
-                                                </div>
+                                                <motion.div 
+                                                    key={i} 
+                                                    className="flex items-center gap-2 text-xs group/item"
+                                                    initial={{ opacity: 0, x: -10 }}
+                                                    whileInView={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: i * 0.1, duration: 0.3 }}
+                                                    viewport={{ once: true }}
+                                                >
+                                                    <motion.div
+                                                        className={`w-5 h-5 bg-gradient-to-br ${service.color} rounded-full flex items-center justify-center flex-shrink-0`}
+                                                        whileHover={{ scale: 1.1, rotate: 180 }}
+                                                        transition={{ duration: 0.2 }}
+                                                    >
+                                                        <CheckCircle className="w-3 h-3 text-white" />
+                                                    </motion.div>
+                                                    <span className="text-gray-700 font-medium group-hover/item:text-gray-900 transition-colors duration-200">
+                                                        {feature}
+                                                    </span>
+                                                </motion.div>
                                             ))}
                                         </div>
                                     </CardContent>
-                                    <CardFooter className="px-6 pb-6">
-                                        <Button className={`w-full bg-gradient-to-r ${service.color} hover:opacity-90 text-white border-0 shadow-lg`} size="sm">
-                                            Learn More
-                                        </Button>
+                                    
+                                    <CardFooter className="px-6 pb-6 relative z-10">
+                                        <motion.div
+                                            className="w-full"
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            <Button className={`w-full bg-gradient-to-r ${service.color} hover:opacity-90 text-white border-0 transition-all duration-300 py-2 text-sm font-semibold group/btn`}>
+                                                <span className="group-hover/btn:translate-x-1 transition-transform duration-300">
+                                                    Learn More
+                                                </span>
+                                                <ArrowRight className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                                            </Button>
+                                        </motion.div>
                                     </CardFooter>
                                 </Card>
                             </motion.div>
                         );
                     })}
+                </motion.div>
+
+                {/* Enhanced CTA Section */}
+                <motion.div 
+                    className="text-center mt-16"
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, amount: 0.5 }}
+                    variants={animationVariants.fadeInUp}
+                >
+                    <div className="bg-gradient-to-r from-cyan-500/10 via-pink-500/10 to-purple-500/10 rounded-3xl p-8 border border-cyan-200/30 backdrop-blur-sm">
+                        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                            Ready to Start Your Project?
+                        </h3>
+                        <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                            Let's discuss your requirements and create something amazing together. 
+                            Our team is ready to bring your vision to life.
+                        </p>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white transition-all duration-300 px-8 py-4 text-lg font-semibold group">
+                                Get Started Today
+                                <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                            </Button>
+                        </motion.div>
+                    </div>
                 </motion.div>
             </div>
         </section>

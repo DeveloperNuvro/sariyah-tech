@@ -127,13 +127,12 @@ const CoursesPage = () => {
 
                     {/* Enhanced Search and Filters */}
                     <motion.div 
-                        className="max-w-4xl mx-auto"
+                        className="max-w-5xl mx-auto"
                         initial="hidden"
                         animate="show"
                         variants={animationVariants.fadeInUp}
                     >
-                        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-lg">
-                            <CardContent className="p-6">
+                        <div className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-6">
                                 {/* Main Search Bar */}
                                 <div className="relative mb-6">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
@@ -141,62 +140,137 @@ const CoursesPage = () => {
                                         placeholder="Search courses, categories, or skills..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="pl-12 pr-4 py-4 text-lg border-2 border-cyan-400/20 focus:border-pink-400/40 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl"
+                                    className="pl-12 pr-12 py-4 text-lg border-2 border-cyan-400/20 focus:border-pink-400/40 transition-all duration-300 rounded-xl bg-white/80"
                                     />
                                     {searchTerm && (
-                                        <button
+                                    <motion.button
                                             onClick={() => setSearchTerm('')}
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </motion.button>
+                                )}
+                            </div>
+
+                            {/* Quick Filters Row */}
+                            <div className="flex flex-wrap items-center gap-3 mb-6">
+                                {/* Category Quick Filters */}
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-medium text-gray-600 whitespace-nowrap">Categories:</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        <motion.button
+                                            onClick={() => setSelectedCategory('all')}
+                                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                                                selectedCategory === 'all'
+                                                    ? 'bg-gradient-to-r from-cyan-500 to-pink-500 text-white shadow-md'
+                                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                            }`}
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
                                         >
-                                            <X className="w-4 h-4" />
-                                        </button>
-                                    )}
+                                            All
+                                        </motion.button>
+                                        {categories.slice(0, 4).map(category => (
+                                            <motion.button
+                                                key={category._id}
+                                                onClick={() => setSelectedCategory(category._id)}
+                                                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                                                    selectedCategory === category._id
+                                                        ? 'bg-gradient-to-r from-cyan-500 to-pink-500 text-white shadow-md'
+                                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                }`}
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                {category.name}
+                                            </motion.button>
+                                        ))}
+                                        {categories.length > 4 && (
+                                            <motion.button
+                                                onClick={() => setShowFilters(!showFilters)}
+                                                className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200"
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                +{categories.length - 4} more
+                                            </motion.button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sort and Advanced Filters Row */}
+                            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-sm font-medium text-gray-600">Sort by:</span>
+                                    <Select value={sortBy} onValueChange={setSortBy}>
+                                        <SelectTrigger className="w-48 border-cyan-400/20 focus:border-pink-400/40 bg-white text-gray-900 rounded-xl">
+                                            <SelectValue placeholder="Sort by" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl">
+                                            <SelectItem value="newest" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">Newest First</SelectItem>
+                                            <SelectItem value="price-asc" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">Price: Low to High</SelectItem>
+                                            <SelectItem value="price-desc" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">Price: High to Low</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
 
-                                {/* Filter Toggle Button */}
-                                <div className="flex items-center justify-between mb-4">
-                                    <Button
-                                        variant="outline"
+                                <div className="flex items-center gap-3">
+                                    {hasActiveFilters && (
+                                        <motion.button
+                                            onClick={clearFilters}
+                                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200"
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <X className="w-4 h-4" />
+                                            Clear All
+                                        </motion.button>
+                                    )}
+
+                                    <motion.button
                                         onClick={() => setShowFilters(!showFilters)}
-                                        className="flex items-center gap-2 border-cyan-400/20 hover:bg-cyan-400/10"
+                                        className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${
+                                            showFilters
+                                                ? 'bg-gradient-to-r from-cyan-500 to-pink-500 text-white shadow-md'
+                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
                                     >
                                         <Filter className="w-4 h-4" />
-                                        Filters
-                                        {hasActiveFilters && (
-                                            <Badge variant="secondary" className="ml-2 bg-cyan-100 text-cyan-700">
+                                        Advanced Filters
+                                        {hasActiveFilters && !showFilters && (
+                                            <Badge variant="secondary" className="ml-1 bg-white/20 text-white text-xs">
                                                 Active
                                             </Badge>
                                         )}
-                                    </Button>
-                                    
-                                    {hasActiveFilters && (
-                                        <Button
-                                            variant="ghost"
-                                            onClick={clearFilters}
-                                            className="text-gray-500 hover:text-gray-700"
-                                        >
-                                            Clear All
-                                        </Button>
-                                    )}
+                                    </motion.button>
+                                </div>
                                 </div>
 
                                 {/* Advanced Filters */}
                                 {showFilters && (
                                     <motion.div 
-                                        className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-200"
+                                    className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-200"
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
                                         exit={{ opacity: 0, height: 0 }}
                                         transition={{ duration: 0.3 }}
                                     >
                                         {/* Category Filter */}
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-700">Category</label>
+                                    <div className="space-y-3">
+                                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                            <BookOpen className="w-4 h-4 text-cyan-500" />
+                                            Category
+                                        </label>
                                             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                                <SelectTrigger className="border-cyan-400/20 focus:border-pink-400/40 bg-white text-gray-900">
+                                            <SelectTrigger className="border-cyan-400/20 focus:border-pink-400/40 bg-white text-gray-900 rounded-xl">
                                                     <SelectValue placeholder="All Categories" />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                                            <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl">
                                                     <SelectItem value="all" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">All Categories</SelectItem>
                                                     {categories.map(cat => (
                                                         <SelectItem key={cat._id} value={cat._id} className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">
@@ -208,13 +282,16 @@ const CoursesPage = () => {
                                         </div>
 
                                         {/* Sort Filter */}
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-700">Sort By</label>
+                                    <div className="space-y-3">
+                                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                            <ArrowUpDown className="w-4 h-4 text-pink-500" />
+                                            Sort Order
+                                        </label>
                                             <Select value={sortBy} onValueChange={setSortBy}>
-                                                <SelectTrigger className="border-cyan-400/20 focus:border-pink-400/40 bg-white text-gray-900">
+                                            <SelectTrigger className="border-cyan-400/20 focus:border-pink-400/40 bg-white text-gray-900 rounded-xl">
                                                     <SelectValue placeholder="Sort by" />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                                            <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl">
                                                     <SelectItem value="newest" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">Newest First</SelectItem>
                                                     <SelectItem value="price-asc" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">Price: Low to High</SelectItem>
                                                     <SelectItem value="price-desc" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100">Price: High to Low</SelectItem>
@@ -224,32 +301,37 @@ const CoursesPage = () => {
                                     </motion.div>
                                 )}
 
-                                {/* Results Info */}
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                            {/* Results Summary */}
+                            <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+                                <div className="flex items-center gap-3">
                                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                                        <BookOpen className="w-4 h-4" />
+                                        <BookOpen className="w-4 h-4 text-cyan-500" />
                                         <span>
-                                            Found <span className="font-semibold text-cyan-600">{filteredAndSortedCourses.length}</span> courses
+                                            Found <span className="font-bold text-cyan-600 text-lg">{filteredAndSortedCourses.length}</span> courses
                                         </span>
                                     </div>
                                     
                                     {hasActiveFilters && (
-                                        <div className="flex items-center gap-2 text-xs">
+                                        <div className="flex items-center gap-2">
                                             {searchTerm && (
-                                                <Badge variant="outline" className="bg-cyan-50 text-cyan-700 border-cyan-200">
+                                                <Badge variant="outline" className="bg-cyan-50 text-cyan-700 border-cyan-200 px-3 py-1">
                                                     Search: "{searchTerm}"
                                                 </Badge>
                                             )}
                                             {selectedCategory !== 'all' && (
-                                                <Badge variant="outline" className="bg-pink-50 text-pink-700 border-pink-200">
+                                                <Badge variant="outline" className="bg-pink-50 text-pink-700 border-pink-200 px-3 py-1">
                                                     {categories.find(c => c._id === selectedCategory)?.name}
                                                 </Badge>
                                             )}
                                         </div>
                                     )}
                                 </div>
-                            </CardContent>
-                        </Card>
+                                
+                                <div className="text-sm text-gray-500">
+                                    {filteredAndSortedCourses.length === courses?.length ? 'Showing all courses' : 'Filtered results'}
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
                 </div>
             </section>

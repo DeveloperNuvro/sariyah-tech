@@ -33,7 +33,7 @@ export const InstructorCourseCard = ({ course, handleDelete, handleTogglePublish
       <img
         src={course.thumbnail}
         alt={course.title}
-        className="h-44 w-full object-cover"
+        className="w-full aspect-square object-cover"
       />
       <CardHeader>
         <CardTitle className="line-clamp-2 h-14">{course.title}</CardTitle>

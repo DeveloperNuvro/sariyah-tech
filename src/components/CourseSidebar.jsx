@@ -31,7 +31,7 @@ export const CourseSidebar = ({ course, isEnrolled, isOwner, isAuthenticated, us
     <div className="relative">
       <Card className="overflow-hidden shadow-xl lg:sticky lg:top-24">
         <CardHeader className="p-0">
-          <img src={course.thumbnail} alt={course.title} className="w-full h-52 object-cover" />
+          <img src={course.thumbnail} alt={course.title} className="w-full aspect-square object-cover" />
         </CardHeader>
         <CardContent className="p-6">
           {/* Pricing Display */}

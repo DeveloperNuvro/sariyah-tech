@@ -18,7 +18,7 @@ export const CourseCard = ({ course }) => {
                     <img
                         src={course.thumbnail}
                         alt={course.title}
-                        className="w-full h-48 object-cover"
+                        className="w-full aspect-square object-cover"
                     />
                 </CardHeader>
                 <CardContent className="p-4 flex-grow flex flex-col">

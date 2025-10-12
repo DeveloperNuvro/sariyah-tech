@@ -171,7 +171,7 @@ const CourseSidebar = ({ course, isEnrolled, isOwner, isAuthenticated, user, onE
             <Card className="overflow-hidden lg:sticky lg:top-24 bg-white border border-gray-200">
                 <CardHeader className="p-0">
                     <div className="relative">
-                        <img src={course.thumbnail} alt={course.title} className="w-full h-52 object-cover" />
+                        <img src={course.thumbnail} alt={course.title} className="w-full aspect-square object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                         <Badge className="absolute top-4 left-4 bg-gradient-to-r from-cyan-500 to-pink-500 text-white border-0">
                             {course.category?.name || 'Development'}

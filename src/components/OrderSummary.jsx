@@ -17,7 +17,7 @@ export const OrderSummary = ({ course }) => {
           <img 
             src={course.thumbnail} 
             alt={course.title}
-            className="h-20 w-28 rounded-md object-cover"
+            className="h-20 w-20 rounded-md object-cover"
           />
           <div className="flex-1">
             <h3 className="font-semibold line-clamp-2">{course.title}</h3>
