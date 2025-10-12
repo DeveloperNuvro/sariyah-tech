@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:8900/api', 
+  baseURL: 'https://whale-app-upwat.ondigitalocean.app/api', 
   headers: {
     'Content-Type': 'application/json',
   },
