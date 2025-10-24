@@ -7,6 +7,7 @@ import { store } from './app/store.js';
 
 import api from './services/api.js';
 import { setToken, logoutUser, loadUser } from './features/auth/authSlice.js';
+import { Analytics } from "@vercel/analytics/react"
 
 // --- Interceptor Setup (from previous fix) ---
 api.interceptors.request.use(
@@ -56,6 +57,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
+      <Analytics />
       <App />
     </Provider>
   </React.StrictMode>

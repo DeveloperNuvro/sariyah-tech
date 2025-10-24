@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loadUser } from './features/auth/authSlice';
 import { Toaster } from 'react-hot-toast'; // For user feedback
 
 // Page Imports
@@ -34,6 +32,7 @@ import LessonManagement from './pages/admin/LessonManagement';
 import ReviewManagement from './pages/admin/ReviewManagement';
 import OrderManagement from './pages/admin/OrderManagement';
 import ProfileSettings from './pages/ProfileSettings';
+
 
 function App() {
 

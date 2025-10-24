@@ -368,14 +368,6 @@ const CourseLessonPage = () => {
         };
     }, [courseId, dispatch, isAuthenticated]);
 
-    if (!isAuthenticated) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <p>Access Denied. Please log in and enroll to view this course.</p>
-            </div>
-        );
-    }
-
     // Auto-select lesson
     useEffect(() => {
         if (lessons.length > 0 && !selectedLesson) {
@@ -406,6 +398,14 @@ const CourseLessonPage = () => {
 
     // Lesson Navigation Logic
     const currentLessonIndex = useMemo(() => lessons.findIndex(l => l._id === selectedLesson?._id), [lessons, selectedLesson]);
+
+    if (!isAuthenticated) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <p>Access Denied. Please log in and enroll to view this course.</p>
+            </div>
+        );
+    }
     const isFirstLesson = currentLessonIndex === 0;
     const isLastLesson = currentLessonIndex === lessons.length - 1;
     const handleNextLesson = () => { if (!isLastLesson) setSelectedLesson(lessons[currentLessonIndex + 1]); };

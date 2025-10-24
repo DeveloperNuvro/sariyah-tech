@@ -31,5 +31,5 @@ export const store = configureStore({
   },
   // Adding middleware is good practice for production, but not strictly needed for this setup to work
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-  devTools: process.env.NODE_ENV !== 'production', // Enable devtools only in development
+  devTools: import.meta.env.DEV, // Enable devtools only in development
 });

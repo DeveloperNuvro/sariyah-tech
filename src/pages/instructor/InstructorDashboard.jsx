@@ -290,7 +290,7 @@ const InstructorDashboard = () => {
           
           <div className="flex gap-3">
             {/* Temporary button to fix progress - remove after fixing */}
-            {process.env.NODE_ENV === 'development' && instructorCourses.length > 0 && (
+            {import.meta.env.DEV && instructorCourses.length > 0 && (
               <Button 
                 onClick={handleRecalculateAllProgress}
                 variant="outline"
