@@ -96,6 +96,7 @@ const getRoleBasedNavLinks = (role) => {
                 { to: "/admin/dashboard", text: "Dashboard", icon: <Crown className="h-4 w-4" />, color: "from-yellow-500 to-orange-500" },
                 { to: "/admin/users", text: "Users", icon: <User className="h-4 w-4" />, color: "from-green-500 to-emerald-500" },
                 { to: "/admin/courses", text: "Courses", icon: <BookOpen className="h-4 w-4" />, color: "from-blue-500 to-indigo-500" },
+                { to: "/admin/orders", text: "Orders", icon: <ShoppingCart className="h-4 w-4" />, color: "from-orange-500 to-red-500" },
                 { to: "/admin/categories", text: "Categories", icon: <BookMarked className="h-4 w-4" />, color: "from-purple-500 to-violet-500" },
             ];
         default:
@@ -410,10 +411,10 @@ const Header = () => {
                             </SheetTrigger>
                         <SheetContent 
                             side="left" 
-                            className="p-0 w-full max-w-sm bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 border-r border-white/20"
+                            className="p-0 w-full max-w-sm bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 border-r border-white/20 flex flex-col h-full"
                         >
                             {/* Mobile Header */}
-                            <div className="px-6 py-4 border-b border-white/10">
+                            <div className="px-6 py-4 border-b border-white/10 flex-shrink-0">
                                 <div className="flex items-center justify-between">
                                     <Logo isMobile={true} />
                                     <motion.div
@@ -433,7 +434,7 @@ const Header = () => {
                             </div>
 
                             {/* Mobile Search */}
-                            <div className="px-6 py-4 border-b border-white/10">
+                            <div className="px-6 py-4 border-b border-white/10 flex-shrink-0">
                                 <form onSubmit={handleSearch} className="relative">
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 h-4 w-4" />
                                     <input
@@ -447,7 +448,7 @@ const Header = () => {
                             </div>
 
                             {/* Mobile Navigation Links */}
-                            <div className="flex-1 overflow-y-auto px-6 py-4">
+                            <div className="flex-1 overflow-y-auto px-6 py-4 min-h-0">
                                 <div className="space-y-3">
                                     {/* Main Navigation */}
                                     <div className="space-y-2">
@@ -529,7 +530,7 @@ const Header = () => {
 
                             {/* Mobile Footer */}
                             {isAuthenticated && (
-                                <div className="px-6 py-4 border-t border-white/10">
+                                <div className="px-6 py-4 border-t border-white/10 flex-shrink-0">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="h-10 w-10 border-2 border-white/30">
                                             <AvatarImage src={user.avatar} alt={user.name} />
