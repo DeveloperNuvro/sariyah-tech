@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 
 // Redux Imports
 import { fetchCourseBySlug, clearCurrentCourse } from '../features/courses/courseSlice';
+import api from '@/services/api';
 import { fetchMyEnrollments } from '@/features/enrollments/enrollmentSlice';
 import { createOrder } from '@/features/orders/orderSlice';
 
@@ -124,6 +125,21 @@ const CourseCurriculum = ({ lessons }) => {
 };
 
 const CourseSidebar = ({ course, isEnrolled, isOwner, isAuthenticated, user, onEnrollClick, isEnrolling }) => {
+    const [groupLink, setGroupLink] = React.useState('');
+    React.useEffect(() => {
+        let cancelled = false;
+        async function load() {
+            if (!course?._id) return;
+            if (!(isEnrolled || isOwner || user?.role === 'admin')) return;
+            try {
+                const { data } = await api.get(`/courses/${course._id}/group-link`);
+                if (!cancelled) setGroupLink(data?.data?.groupLink || '');
+            } catch {}
+        }
+        load();
+        return () => { cancelled = true; };
+    }, [course?._id, isEnrolled, isOwner, user?.role]);
+
     const renderActionButtons = () => {
         if (isOwner || user?.role === 'admin') {
             return (
@@ -139,13 +155,18 @@ const CourseSidebar = ({ course, isEnrolled, isOwner, isAuthenticated, user, onE
             );
         }
         if (isEnrolled) {
-            return (
+        return (
+            <div className="space-y-3">
                 <Button asChild size="lg" className="w-full group bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white transition-all duration-300">
                     <Link to={`/learn/${course._id}`}>
                         Start Learning <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>
                 </Button>
-            );
+                {groupLink && (
+                    <a href={groupLink} target="_blank" rel="noreferrer" className="inline-flex w-full items-center justify-center rounded-xl border border-cyan-300/60 bg-cyan-50 text-cyan-800 py-2 text-sm font-medium hover:bg-cyan-100">Join Group</a>
+                )}
+            </div>
+        );
         }
         return (
             <Button

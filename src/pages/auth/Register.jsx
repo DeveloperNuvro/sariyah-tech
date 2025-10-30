@@ -72,6 +72,7 @@ const RegisterPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     password: '',
     role: 'student', // Fixed as student
   });
@@ -181,6 +182,25 @@ const RegisterPage = () => {
                     </div>
                   </motion.div>
                   
+                  <motion.div variants={animationVariants.fadeInUp} className="space-y-2">
+                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                      Phone Number
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        placeholder="Enter your phone number"
+                        value={formData.phone}
+                        onChange={onChange}
+                        required
+                        disabled={isLoading}
+                        className="h-12 border-gray-200 focus:border-cyan-400 focus:ring-cyan-400/20"
+                      />
+                    </div>
+                  </motion.div>
+
                   <motion.div variants={animationVariants.fadeInUp} className="space-y-2">
                     <Label htmlFor="password" className="text-sm font-medium text-gray-700">
                       Password

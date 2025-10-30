@@ -12,6 +12,9 @@ import categoryReducer from '../features/categories/categorySlice';
 import adminReducer from '../features/admin/adminSlice';
 import reviewReducer from '../features/reviews/reviewSlice';
 import profileReducer from '../features/profile/profileSlice'; 
+import productReducer from '../features/products/productSlice';
+import dcartReducer from '../features/dcart/cartSlice';
+import dorderReducer from '../features/dorders/dorderSlice';
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +31,9 @@ export const store = configureStore({
     admin: adminReducer,
     reviews: reviewReducer,
     profile: profileReducer,
+    products: productReducer,
+    dcart: dcartReducer,
+    dorders: dorderReducer,
   },
   // Adding middleware is good practice for production, but not strictly needed for this setup to work
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

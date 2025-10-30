@@ -15,12 +15,14 @@ import { Clock, AlertCircle, Download, BookOpen, MoreVertical, Star, Eye, CheckC
 import { CourseProgressBar } from './CourseProgressBar';
 import ReviewDialog from './ReviewDialog';
 import { canReviewCourse } from '../features/reviews/reviewSlice';
+import api from '@/services/api';
 
 // The props are fine, the course object is inside enrollmentDetails
 export const MyCourseCard = ({ order, enrollmentDetails, certificate }) => {
   const dispatch = useDispatch();
   const { canReview, reviewReason } = useSelector((state) => state.reviews);
   const [showReviewDialog, setShowReviewDialog] = useState(false);
+  const [groupLink, setGroupLink] = useState('');
 
   // Check if student can review this course when component mounts
   useEffect(() => {
@@ -28,6 +30,20 @@ export const MyCourseCard = ({ order, enrollmentDetails, certificate }) => {
       dispatch(canReviewCourse(enrollmentDetails.course._id));
     }
   }, [dispatch, enrollmentDetails?.course?._id]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const id = enrollmentDetails?.course?._id;
+      if (!id) return;
+      try {
+        const { data } = await api.get(`/courses/${id}/group-link`);
+        if (!cancelled) setGroupLink(data?.data?.groupLink || '');
+      } catch {}
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [enrollmentDetails?.course?._id]);
 
   const renderActionAndProgress = () => {
     // Case 1: The user is fully enrolled.
@@ -100,6 +116,11 @@ export const MyCourseCard = ({ order, enrollmentDetails, certificate }) => {
                 {progress > 0 ? 'Continue Learning' : 'Start Learning'}
               </Link>
             </Button>
+            {groupLink && (
+              <Button asChild variant="outline">
+                <a href={groupLink} target="_blank" rel="noreferrer">Join Group</a>
+              </Button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="self-start sm:self-center">

@@ -31,7 +31,16 @@ import CourseManagement from './pages/admin/CourseManagement';
 import LessonManagement from './pages/admin/LessonManagement';
 import ReviewManagement from './pages/admin/ReviewManagement';
 import OrderManagement from './pages/admin/OrderManagement';
+import DigitalOrdersAdminPage from './pages/admin/DigitalOrders';
+import ProductsList from './pages/admin/ProductsList';
+import ProductCreate from './pages/admin/ProductCreate';
+import ProductEdit from './pages/admin/ProductEdit';
 import ProfileSettings from './pages/ProfileSettings';
+import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import DigitalOrderDetails from './pages/DigitalOrderDetails';
+import MyDigitalOrders from './pages/MyDigitalOrders';
 
 
 function App() {
@@ -50,6 +59,12 @@ function App() {
           <Route path="/register/instructor" element={<InstructorRegisterPage />} />
           <Route path="/course/:slug" element={<CourseDetailPage />} />
               <Route path="/courses" element={<CoursesPage />} />
+          {/* Digital shop routes */}
+          <Route path="/shop" element={<Products />} />
+          <Route path="/product/:slug" element={<ProductDetail />} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/digital-orders/:orderId" element={<ProtectedRoute><DigitalOrderDetails /></ProtectedRoute>} />
+          <Route path="/dashboard/digital-orders" element={<ProtectedRoute><MyDigitalOrders /></ProtectedRoute>} />
           {/* Student Routes */}
           <Route path="/checkout/:courseId" element={<StudentRoute><CheckoutPage /></StudentRoute>} />
           <Route path="/dashboard/my-courses" element={<StudentRoute><StudentDashboard /></StudentRoute>} />
@@ -74,6 +89,10 @@ function App() {
           <Route path="/admin/lessons" element={<AdminRoute><LessonManagement /></AdminRoute>} />
           <Route path="/admin/reviews" element={<AdminRoute><ReviewManagement /></AdminRoute>} />
           <Route path="/admin/orders" element={<AdminRoute><OrderManagement /></AdminRoute>} />
+          <Route path="/admin/digital-orders" element={<AdminRoute><DigitalOrdersAdminPage /></AdminRoute>} />
+          <Route path="/admin/products" element={<AdminRoute><ProductsList /></AdminRoute>} />
+          <Route path="/admin/products/new" element={<AdminRoute><ProductCreate /></AdminRoute>} />
+          <Route path="/admin/products/:id/edit" element={<AdminRoute><ProductEdit /></AdminRoute>} />
           <Route path="/admin/payments" element={<AdminRoute><PaymentManagementPage /></AdminRoute>} />
           <Route path="/admin/categories" element={<AdminRoute><CategoryManagement /></AdminRoute>} />
           {/* A 404 Not Found component would go here */}

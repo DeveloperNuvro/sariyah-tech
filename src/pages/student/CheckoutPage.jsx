@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { fetchCourseById } from '../../features/courses/courseSlice';
 import { createOrder } from '../../features/orders/orderSlice';
+import api from '@/services/api';
 import { 
   CreditCard, 
   Smartphone, 
@@ -98,8 +99,16 @@ const CheckoutPage = () => {
 
     dispatch(createOrder(formData))
       .unwrap()
-      .then(() => {
-        toast.success('🎉 Enrollment request submitted! Please wait for admin approval.');
+      .then(async () => {
+        // Try to fetch group link immediately for free enrollments
+        try {
+          const { data } = await api.get(`/courses/${courseId}/group-link`);
+          const link = data?.data?.groupLink;
+          if (link) {
+            toast.success('🎉 Enrollment successful! Join the course group now.');
+            window.open(link, '_blank');
+          }
+        } catch {}
         navigate('/dashboard/my-courses');
       })
       .catch((err) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { fetchAllCourses } from '@/features/courses/courseSlice';
@@ -30,7 +30,10 @@ const CoursesPage = () => {
     const [sortBy, setSortBy] = useState('newest');
     const [showFilters, setShowFilters] = useState(false);
 
+    const fetchedRef = useRef(false);
     useEffect(() => {
+        if (fetchedRef.current) return;
+        fetchedRef.current = true;
         dispatch(fetchAllCourses());
         dispatch(fetchAllCategories());
     }, [dispatch]);
@@ -371,6 +374,19 @@ const CoursesPage = () => {
                                 <CourseCardSkeleton />
                             </motion.div>
                         ))}
+                    </motion.div>
+                ) : courseStatus === 'failed' ? (
+                    <motion.div 
+                        className="text-center py-20"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="w-24 h-24 bg-gradient-to-br from-red-200 to-red-300 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="text-red-700 text-3xl">!</span>
+                        </div>
+                        <h3 className="text-2xl font-semibold text-gray-600 mb-2">Failed to load courses</h3>
+                        <p className="text-gray-500 mb-6">Please refresh the page. If the problem persists, try again later.</p>
                     </motion.div>
                 ) : courses && courses.length > 0 && filteredAndSortedCourses.length > 0 ? (
                     <>

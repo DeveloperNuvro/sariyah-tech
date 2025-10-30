@@ -44,6 +44,7 @@ import {
 
 // Your Redux logout action
 import { logoutUser } from '@/features/auth/authSlice';
+import { fetchCart } from '@/features/dcart/cartSlice';
 
 import DarkLogo from "../../assets/images/DarkLogo.png"
 // Enhanced Logo component with animations
@@ -85,7 +86,8 @@ const getRoleBasedNavLinks = (role) => {
     switch (role) {
         case 'student':
             return [
-                { to: "/dashboard/my-courses", text: "My Courses", icon: <GraduationCap className="h-4 w-4" />, color: "from-blue-500 to-cyan-500" }
+                { to: "/dashboard/my-courses", text: "My Courses", icon: <GraduationCap className="h-4 w-4" />, color: "from-blue-500 to-cyan-500" },
+                { to: "/dashboard/digital-orders", text: "My Orders", icon: <ShoppingCart className="h-4 w-4" />, color: "from-emerald-500 to-green-500" },
             ];
         case 'instructor':
             return [
@@ -97,6 +99,8 @@ const getRoleBasedNavLinks = (role) => {
                 { to: "/admin/users", text: "Users", icon: <User className="h-4 w-4" />, color: "from-green-500 to-emerald-500" },
                 { to: "/admin/courses", text: "Courses", icon: <BookOpen className="h-4 w-4" />, color: "from-blue-500 to-indigo-500" },
                 { to: "/admin/orders", text: "Orders", icon: <ShoppingCart className="h-4 w-4" />, color: "from-orange-500 to-red-500" },
+                { to: "/admin/digital-orders", text: "Digital Orders", icon: <ShoppingCart className="h-4 w-4" />, color: "from-emerald-500 to-green-500" },
+                { to: "/admin/products", text: "Products", icon: <BookMarked className="h-4 w-4" />, color: "from-purple-500 to-violet-500" },
                 { to: "/admin/categories", text: "Categories", icon: <BookMarked className="h-4 w-4" />, color: "from-purple-500 to-violet-500" },
             ];
         default:
@@ -108,6 +112,7 @@ const getRoleBasedNavLinks = (role) => {
 const getMainNavLinks = () => [
     { to: "/", text: "Home", icon: <Home className="h-4 w-4" />, color: "from-cyan-500 to-blue-500" },
     { to: "/courses", text: "Courses", icon: <BookOpen className="h-4 w-4" />, color: "from-pink-500 to-rose-500" },
+    { to: "/shop", text: "Shop", icon: <ShoppingCart className="h-4 w-4" />, color: "from-emerald-500 to-green-500" },
 ];
 
 const UserNav = () => {
@@ -283,7 +288,9 @@ const UserNav = () => {
 };
 
 const Header = () => {
+    const dispatch = useDispatch();
     const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const { items: cartItems } = useSelector((state) => state.dcart);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -296,6 +303,12 @@ const Header = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(fetchCart());
+        }
+    }, [dispatch, isAuthenticated]);
 
     const mainNavLinks = getMainNavLinks();
     const roleLinks = isAuthenticated ? getRoleBasedNavLinks(user.role) : [];
@@ -331,7 +344,7 @@ const Header = () => {
             >
                 {link.icon}
             </motion.div>
-            <span className="font-medium">{link.text}</span>
+            <span className="font-medium hidden xl:inline">{link.text}</span>
             {({ isActive }) => isActive && (
                 <motion.div
                     className="absolute inset-0 bg-white/20 rounded-xl"
@@ -365,7 +378,7 @@ const Header = () => {
                     {/* --- DESKTOP NAVIGATION --- */}
                     <div className="mr-6 hidden lg:flex items-center">
                         <Logo />
-                        <nav className="flex items-center space-x-2 ml-8">
+                        <nav className="flex items-center space-x-2 ml-8 overflow-x-auto whitespace-nowrap max-w-[60vw]">
                             {mainNavLinks.map((link, index) => (
                                 <motion.div
                                     key={link.to}
@@ -376,16 +389,7 @@ const Header = () => {
                                     <NavLinkComponent link={link} />
                                 </motion.div>
                             ))}
-                            {roleLinks.map((link, index) => (
-                                <motion.div
-                                    key={link.to}
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: (mainNavLinks.length + index) * 0.1 }}
-                                >
-                                    <NavLinkComponent link={link} />
-                                </motion.div>
-                            ))}
+                            {/* Role links omitted from desktop nav to keep header compact; available in user menu */}
                         </nav>
                     </div>
                 </div>
@@ -587,6 +591,18 @@ const Header = () => {
                     <div className="flex items-center space-x-1 md:space-x-3">
                     {isAuthenticated ? (
                         <>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative">
+                                <Button asChild variant="ghost" size="icon" className="text-white hover:text-cyan-400 hover:bg-white/10 h-8 w-8 md:h-10 md:w-10">
+                                    <Link to="/cart">
+                                        <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+                                    </Link>
+                                </Button>
+                                {Array.isArray(cartItems) && cartItems.length > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full px-1.5 py-0.5">
+                                        {cartItems.length}
+                                    </span>
+                                )}
+                            </motion.div>
                             {/* Notification Bell */}
                             <motion.div
                                 whileHover={{ scale: 1.05 }}

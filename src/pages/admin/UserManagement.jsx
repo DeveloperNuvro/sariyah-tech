@@ -17,6 +17,7 @@ import {
   UserCheck, 
   UserX,
   Mail,
+  Phone,
   Calendar,
   Shield,
   GraduationCap,
@@ -334,9 +335,8 @@ const UserManagement = () => {
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                         User
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Role
-                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Role</th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Phone</th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                         Status
                       </th>
@@ -378,6 +378,12 @@ const UserManagement = () => {
                               {getRoleIcon(user.role)}
                               {user.role}
                             </Badge>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+                            <div className="flex items-center gap-1">
+                              <Phone className="w-3 h-3" />
+                              {user.phone || '-'}
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <Badge className={`${

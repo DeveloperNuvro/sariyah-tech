@@ -73,6 +73,7 @@ const CreateCoursePage = () => {
         category: '',
         level: 'beginner',
         language: 'English',
+        groupLink: '',
     });
     const [thumbnail, setThumbnail] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState('');
@@ -309,6 +310,22 @@ const CreateCoursePage = () => {
                                                         <SelectItem value="Hindi" className="text-gray-900 hover:bg-gray-100">Hindi</SelectItem>
                                                     </SelectContent>
                                                 </Select>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="groupLink" className="flex items-center gap-2 text-gray-700 font-semibold">
+                                                    <Globe className="w-4 h-4 text-cyan-600" />
+                                                    Group Link (optional)
+                                                </Label>
+                                                <Input 
+                                                    id="groupLink"
+                                                    name="groupLink"
+                                                    type="url"
+                                                    placeholder="https://chat.whatsapp.com/... or any URL"
+                                                    value={formData.groupLink}
+                                                    onChange={handleInputChange}
+                                                    className="border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
+                                                />
                                             </div>
                                         </div>
                                     </motion.div>

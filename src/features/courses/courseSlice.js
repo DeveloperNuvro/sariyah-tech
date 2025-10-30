@@ -18,7 +18,8 @@ export const fetchAllCourses = createAsyncThunk(
       const { data } = await api.get('/courses');
       return data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      const msg = error?.response?.data?.message || error?.message || 'Failed to fetch courses';
+      return rejectWithValue(msg);
     }
   }
 );

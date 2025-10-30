@@ -14,7 +14,8 @@ import {
   Tag,
   FileText,
   Image,
-  Sparkles
+  Sparkles,
+  Globe
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -74,7 +75,8 @@ const EditCourse = () => {
     category: '',
     objectives: '',
     prerequisites: '',
-    thumbnail: ''
+    thumbnail: '',
+    groupLink: ''
   });
   
   const [isLoading, setIsLoading] = useState(false);
@@ -103,7 +105,8 @@ const EditCourse = () => {
         category: course.category?._id || '',
         objectives: course.objectives || '',
         prerequisites: course.prerequisites || '',
-        thumbnail: course.thumbnail || ''
+        thumbnail: course.thumbnail || '',
+        groupLink: course.groupLink || ''
       });
     }
   }, [course]);
@@ -460,6 +463,25 @@ const EditCourse = () => {
                       onChange={handleInputChange}
                       className="pl-10 border-gray-300 focus:border-cyan-500 focus:ring-cyan-500 resize-none"
                       rows={4}
+                    />
+                  </div>
+                </div>
+
+                {/* Group Link */}
+                <div className="space-y-2">
+                  <Label htmlFor="groupLink" className="text-sm font-medium text-gray-700">
+                    Group Link (optional)
+                  </Label>
+                  <div className="relative">
+                    <Globe className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                    <Input
+                      id="groupLink"
+                      name="groupLink"
+                      type="url"
+                      placeholder="https://chat.whatsapp.com/..."
+                      value={formData.groupLink}
+                      onChange={handleInputChange}
+                      className="pl-10 border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
                     />
                   </div>
                 </div>

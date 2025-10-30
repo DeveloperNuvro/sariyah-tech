@@ -77,7 +77,7 @@ export const getAllUsers = createAsyncThunk(
   'admin/getAllUsers',
   async (params, { rejectWithValue }) => {
     try {
-      const { data } = await api.get('/admin/users', { params });
+      const { data } = await api.get('/users', { params });
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message || 'Failed to fetch users');
@@ -89,7 +89,7 @@ export const updateUser = createAsyncThunk(
   'admin/updateUser',
   async ({ userId, userData }, { rejectWithValue }) => {
     try {
-      const { data } = await api.put(`/admin/users/${userId}`, userData);
+      const { data } = await api.put(`/users/${userId}`, userData);
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update user');
@@ -101,7 +101,7 @@ export const deleteUser = createAsyncThunk(
   'admin/deleteUser',
   async (userId, { rejectWithValue }) => {
     try {
-      const { data } = await api.delete(`/admin/users/${userId}`);
+      const { data } = await api.delete(`/users/${userId}`);
       return { userId, data };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to delete user');
@@ -390,10 +390,11 @@ const adminSlice = createSlice({
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.users = action.payload.data;
-        state.usersTotal = action.payload.total;
-        state.usersPage = action.payload.page;
-        state.usersPages = action.payload.pages;
+        // Backend returns { success, count, users }
+        state.users = action.payload.users || [];
+        state.usersTotal = action.payload.count || (action.payload.users?.length || 0);
+        state.usersPage = 1;
+        state.usersPages = 1;
       })
       .addCase(getAllUsers.rejected, (state, action) => {
         state.status = 'failed';
