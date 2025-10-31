@@ -3,7 +3,7 @@
 import React from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-
+//ok
 export const CheckoutPageSkeleton = () => (
   <div className="container mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
     <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12">
