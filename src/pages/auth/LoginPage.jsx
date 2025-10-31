@@ -82,7 +82,8 @@ const LoginPage = () => {
       toast.success('Logged in successfully!');
       navigate(from, { replace: true });
     }
-    // Display error toast only when the status changes to 'failed'
+    // Display error - shown in UI component and toast for visibility
+    // Error message comes directly from backend response
     if (status === 'failed' && error) {
       toast.error(error);
     }
@@ -92,10 +93,40 @@ const LoginPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const email = formData.email?.trim() || '';
+    const password = formData.password || '';
+
+    // Required fields
+    if (!email || !password) {
+      toast.error("Please fill in both email and password.");
+      return false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || email.length > 255) {
+      toast.error("Please enter a valid email address.");
+      return false;
+    }
+
+    // Password validation
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return false;
+    }
+
+    if (password.length > 128) {
+      toast.error("Password must be less than 128 characters.");
+      return false;
+    }
+
+    return true;
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
-      toast.error("Please fill in both email and password.");
+    if (!validateForm()) {
       return;
     }
     // We don't need to chain .then() here since the useEffect handles success/error
@@ -143,6 +174,15 @@ const LoginPage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                {status === 'failed' && error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg"
+                  >
+                    <p className="text-sm text-red-800 font-medium">{error}</p>
+                  </motion.div>
+                )}
                 <form onSubmit={onSubmit} className="space-y-6">
                   <motion.div variants={animationVariants.fadeInUp} className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium text-gray-700">
@@ -205,8 +245,16 @@ const LoginPage = () => {
                   </motion.div>
                 </form>
               </CardContent>
-              <CardFooter className="flex justify-center pt-6">
-                <div className="text-center space-y-2">
+              <CardFooter className="flex flex-col space-y-4 pt-6">
+                <div className="text-center w-full">
+                  <Link 
+                    to="/forgot-password"
+                    className="text-sm font-medium text-cyan-600 hover:text-cyan-700 transition-colors"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+                <div className="text-center">
                   <p className="text-sm text-gray-600">
                     Don't have an account?{' '}
                     <Link 
@@ -214,15 +262,6 @@ const LoginPage = () => {
                       className="font-semibold bg-gradient-to-r from-cyan-600 to-pink-600 bg-clip-text text-transparent hover:from-cyan-700 hover:to-pink-700 transition-all duration-300"
                     >
                       Register as Student
-                    </Link>
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Want to teach?{' '}
-                    <Link 
-                      to="/register/instructor" 
-                      className="font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent hover:from-purple-700 hover:to-indigo-700 transition-all duration-300"
-                    >
-                      Register as Instructor
                     </Link>
                   </p>
                 </div>

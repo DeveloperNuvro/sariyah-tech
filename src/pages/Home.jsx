@@ -1,6 +1,6 @@
 // src/pages/Home.jsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 
@@ -95,10 +95,12 @@ const HeroSection = () => {
                             className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
                             variants={animationVariants.fadeInUp}
                         >
-                            <Button size="lg" className="group text-lg px-8 py-6 bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0">
-                                Start Your Project
-                                <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                            </Button>
+                            <Link to="/projects">
+                                <Button size="lg" className="group text-lg px-8 py-6 bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0">
+                                    Start Your Project
+                                    <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                                </Button>
+                            </Link>
                             <Link to="/courses">
                                 <Button size="lg" variant="outline" className="text-lg px-8 py-6 border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 backdrop-blur-sm">
                                     <BookOpen className="mr-2 h-5 w-5" />
@@ -381,10 +383,12 @@ const ServicesSection = () => {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white transition-all duration-300 px-8 py-4 text-lg font-semibold group">
-                                Get Started Today
-                                <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                            </Button>
+                            <Link to="/projects">
+                                <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white transition-all duration-300 px-8 py-4 text-lg font-semibold group">
+                                    Get Started Today
+                                    <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                                </Button>
+                            </Link>
                         </motion.div>
                     </div>
                 </motion.div>
@@ -445,11 +449,12 @@ const FeaturedCoursesSection = () => {
     const { courses, status, error } = useSelector((state) => state.courses);
     const [searchTerm, setSearchTerm] = useState('');
 
+    const fetchedRef = useRef(false);
     useEffect(() => {
-        // Only fetch courses if they haven't been loaded yet
-        if (status === 'idle' || courses.length === 0) {
-            dispatch(fetchAllCourses());
-        }
+        // Only fetch courses once, prevent duplicate calls from React StrictMode
+        if (fetchedRef.current || status === 'loading' || courses.length > 0) return;
+        fetchedRef.current = true;
+        dispatch(fetchAllCourses());
     }, [dispatch, status, courses.length]);
 
     // Filter courses based on search term
@@ -834,10 +839,12 @@ const CTASection = () => {
                         className="flex flex-col sm:flex-row gap-4 justify-center"
                         variants={animationVariants.fadeInUp}
                     >
-                        <Button size="lg" className="text-lg px-8 py-6 bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 group border-0">
-                            Start Your Project
-                            <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                        </Button>
+                        <Link to="/projects">
+                            <Button size="lg" className="text-lg px-8 py-6 bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 group border-0">
+                                Start Your Project
+                                <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                            </Button>
+                        </Link>
                         <Link to="/courses">
                             <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 group">
                                 <BookOpen className="mr-2 h-5 w-5" />
@@ -900,9 +907,9 @@ const Footer = () => {
                 <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400">
                     <p>&copy; {new Date().getFullYear()} Sariyah Tech. All rights reserved.</p>
                     <div className="flex gap-6 mt-4 sm:mt-0">
-                        <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-                        <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
-                        <a href="#" className="hover:text-primary transition-colors">Contact</a>
+                        <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+                        <Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
+                        <a href="mailto:info@sariyahtech.com" className="hover:text-primary transition-colors">Contact</a>
                     </div>
                 </div>
             </div>

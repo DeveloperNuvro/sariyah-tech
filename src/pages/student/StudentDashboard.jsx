@@ -100,6 +100,10 @@ const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
+    document.title = 'My Courses - SariyahTech';
+  }, []);
+
+  useEffect(() => {
     dispatch(fetchMyOrders());
     dispatch(fetchMyEnrollments());
     dispatch(fetchMyCertificates());
@@ -240,24 +244,24 @@ const StudentDashboard = () => {
           <motion.div variants={animationVariants.scaleIn}>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <div className="flex justify-center mb-8">
-                <TabsList className="bg-white/90 backdrop-blur-sm border border-gray-200/50 p-1 shadow-lg rounded-xl">
+                <TabsList className="bg-white/90 backdrop-blur-sm border border-gray-200/50 p-1 rounded-xl">
                   <TabsTrigger 
                     value="all" 
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 rounded-lg px-6 py-2"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all duration-300 rounded-lg px-6 py-2 cursor-pointer"
                   >
                     <BookOpen className="w-4 h-4 mr-2" />
                     All Courses
                   </TabsTrigger>
                   <TabsTrigger 
                     value="in-progress"
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 rounded-lg px-6 py-2"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white transition-all duration-300 rounded-lg px-6 py-2 cursor-pointer"
                   >
                     <TrendingUp className="w-4 h-4 mr-2" />
                     In Progress
                   </TabsTrigger>
                   <TabsTrigger 
                     value="completed"
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 rounded-lg px-6 py-2"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white transition-all duration-300 rounded-lg px-6 py-2 cursor-pointer"
                   >
                     <CheckCircle className="w-4 h-4 mr-2" />
                     Completed

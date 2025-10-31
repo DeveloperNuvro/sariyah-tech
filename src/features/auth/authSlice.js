@@ -20,11 +20,20 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const { data } = await api.post('/users/register', userData);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.accessToken);
-      return data;
+      // Registration now requires email verification
+      // Don't set tokens or user data until email is verified
+      // Just return the success message
+      return { 
+        message: data.message || 'Registration successful! Please check your email.',
+        email: data.email 
+      };
     } catch (error) {
-      return rejectWithValue(error.response.data.message || 'Registration failed');
+      // Extract exact error message from backend response
+      const errorMessage = error?.response?.data?.error || 
+                          error?.response?.data?.message || 
+                          error?.message || 
+                          'Registration failed';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -38,7 +47,12 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('token', data.accessToken);
       return data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message || 'Login failed');
+      // Extract exact error message from backend response
+      const errorMessage = error?.response?.data?.error || 
+                          error?.response?.data?.message || 
+                          error?.message || 
+                          'Login failed';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -57,7 +71,11 @@ export const logoutUser = createAsyncThunk(
       // Even if logout API fails, clear client-side storage
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-      return rejectWithValue(error.response.data.message || 'Logout failed');
+      const errorMessage = error?.response?.data?.error || 
+                          error?.response?.data?.message || 
+                          error?.message || 
+                          'Logout failed';
+      return rejectWithValue(errorMessage);
     }
 });
 
@@ -77,7 +95,11 @@ export const loadUser = createAsyncThunk(
             // In this case, we should clear the invalid token.
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            return rejectWithValue(error.response.data.message || 'Failed to load user');
+            const errorMessage = error?.response?.data?.error || 
+                                error?.response?.data?.message || 
+                                error?.message || 
+                                'Failed to load user';
+            return rejectWithValue(errorMessage);
         }
     }
 );
@@ -101,10 +123,12 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.accessToken;
-        state.role = action.payload.user.role;
+        // Don't authenticate user until email is verified
+        state.isAuthenticated = false;
+        state.user = null;
+        state.token = null;
+        state.role = null;
+        state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';

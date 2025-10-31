@@ -7,6 +7,7 @@ import HomePage from './pages/Home';
 import CourseDetailPage from './pages/CourseDetail';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/Register';
+import VerifyEmail from './pages/auth/VerifyEmail';
 import CheckoutPage from './pages/student/CheckoutPage';
 import StudentDashboard from './pages/student/StudentDashboard';
 import CourseLessonPage from './pages/student/CourseLesson';
@@ -41,6 +42,11 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import DigitalOrderDetails from './pages/DigitalOrderDetails';
 import MyDigitalOrders from './pages/MyDigitalOrders';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Projects from './pages/Projects';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
 
 
 function App() {
@@ -57,6 +63,12 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/register/instructor" element={<InstructorRegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/course/:slug" element={<CourseDetailPage />} />
               <Route path="/courses" element={<CoursesPage />} />
           {/* Digital shop routes */}

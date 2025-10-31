@@ -215,10 +215,10 @@ const UserNav = () => {
                                 {getRoleIcon(user.role)}
                             </div>
                         </div>
-                        <div className="flex flex-col space-y-2">
-                            <div>
+                        <div className="flex flex-col space-y-2 flex-1 min-w-0">
+                            <div className="min-w-0">
                                 <p className="text-lg font-bold leading-none text-gray-900">{user.name}</p>
-                                <p className="text-sm leading-none text-gray-600 mt-1">{user.email}</p>
+                                <p className="text-sm leading-none text-gray-600 mt-1 break-words break-all">{user.email}</p>
                             </div>
                             <Badge className={`w-fit bg-gradient-to-r ${getRoleColor(user.role)} text-white border-0 shadow-lg`}>
                                 <div className="flex items-center gap-1">

@@ -1,9 +1,12 @@
 import axios from 'axios';
-//https://whale-app-upwat.ondigitalocean.app/api
+
+// Get API URL from environment variables
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8900';
+const API_BASE = `${API_URL}/api`;
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'https://whale-app-upwat.ondigitalocean.app/api',
+  baseURL: API_BASE,
   // Do NOT set a global Content-Type; let axios set it per request
   withCredentials: true,
 });
