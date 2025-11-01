@@ -80,8 +80,8 @@ const animationVariants = {
 
 const QuizDialog = ({ isOpen, onClose, lessonId, lessonTitle }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent className="sm:max-w-4xl bg-white/95 backdrop-blur-sm border border-gray-200/50">
-      <DialogHeader className="text-center pb-6">
+    <DialogContent className="sm:max-w-4xl max-h-[90vh] bg-white/95 backdrop-blur-sm border border-gray-200/50 flex flex-col">
+      <DialogHeader className="text-center pb-6 flex-shrink-0">
         <div className="inline-flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
             <Trophy className="w-6 h-6 text-white" />
@@ -94,9 +94,11 @@ const QuizDialog = ({ isOpen, onClose, lessonId, lessonTitle }) => (
           Test your understanding of: <span className="font-semibold text-gray-900">{lessonTitle}</span>
         </DialogDescription>
       </DialogHeader>
-      <div className="py-4">
-        <Quiz lessonId={lessonId} onQuizComplete={onClose} />
-      </div>
+      <ScrollArea className="flex-1 pr-4">
+        <div className="py-4">
+          <Quiz lessonId={lessonId} onQuizComplete={onClose} />
+        </div>
+      </ScrollArea>
     </DialogContent>
   </Dialog>
 );
