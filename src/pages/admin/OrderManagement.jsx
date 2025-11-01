@@ -667,36 +667,79 @@ const OrderManagement = () => {
                 </Card>
 
                 {/* Payment Slip */}
-                {selectedOrderData.paymentSlip && (
-                  <Card className="bg-white border border-gray-200">
-                    <CardHeader className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-b border-gray-200">
-                      <CardTitle className="flex items-center gap-2 text-gray-900">
-                        <CreditCard className="w-5 h-5 text-green-600" />
-                        Payment Slip
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div className="relative group">
-                          <img 
-                            src={selectedOrderData.paymentSlip} 
-                            alt="Payment Slip"
-                            className="w-full max-w-md mx-auto rounded-lg border shadow-sm cursor-pointer hover:shadow-lg transition-shadow duration-300"
-                            onClick={() => window.open(selectedOrderData.paymentSlip, '_blank')}
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg flex items-center justify-center">
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 px-3 py-1 rounded-full text-sm font-medium">
-                              Click to view full size
+                {selectedOrderData.paymentSlip && (() => {
+                  // Construct the full URL for the payment slip image
+                  const getImageUrl = (url) => {
+                    if (!url) return '';
+                    // If it's already a full URL (starts with http), use it as-is
+                    if (url.startsWith('http://') || url.startsWith('https://')) {
+                      return url;
+                    }
+                    // Otherwise, prepend the API base URL
+                    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8900';
+                    const apiBase = `${apiUrl}/api`;
+                    // Remove leading slash from url if present to avoid double slashes
+                    const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
+                    return `${apiBase}/${cleanUrl}`;
+                  };
+
+                  const imageUrl = getImageUrl(selectedOrderData.paymentSlip);
+
+                  return (
+                    <Card className="bg-white border border-gray-200">
+                      <CardHeader className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-b border-gray-200">
+                        <CardTitle className="flex items-center gap-2 text-gray-900">
+                          <CreditCard className="w-5 h-5 text-green-600" />
+                          Payment Slip
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="space-y-4">
+                          <div className="relative group">
+                            <img 
+                              src={imageUrl}
+                              alt="Payment Slip"
+                              className="w-full max-w-md mx-auto rounded-lg border shadow-sm cursor-pointer hover:shadow-lg transition-shadow duration-300"
+                              onClick={() => window.open(imageUrl, '_blank')}
+                              onError={(e) => {
+                                console.error('Failed to load payment slip image. URL:', imageUrl, 'Original:', selectedOrderData.paymentSlip);
+                                e.target.onerror = null; // Prevent infinite loop
+                                e.target.src = ''; // Clear src to prevent broken image icon
+                                const errorDiv = e.target.nextElementSibling;
+                                if (errorDiv) {
+                                  errorDiv.classList.remove('hidden');
+                                  errorDiv.classList.add('flex');
+                                }
+                              }}
+                            />
+                            <div className="hidden items-center justify-center h-64 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+                              <div className="text-center">
+                                <Eye className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                                <p className="text-sm text-gray-500 mb-2">Image failed to load</p>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="mt-2"
+                                  onClick={() => window.open(imageUrl, '_blank')}
+                                >
+                                  Try Opening in New Tab
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg flex items-center justify-center pointer-events-none">
+                              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 px-3 py-1 rounded-full text-sm font-medium">
+                                Click to view full size
+                              </div>
                             </div>
                           </div>
+                          <p className="text-sm text-gray-600 text-center">
+                            Payment confirmation screenshot uploaded by student
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-600 text-center">
-                          Payment confirmation screenshot uploaded by student
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                      </CardContent>
+                    </Card>
+                  );
+                })()}
 
                 {/* Student Information */}
                 <Card className="bg-white border border-gray-200">

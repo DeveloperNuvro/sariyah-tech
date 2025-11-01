@@ -14,10 +14,34 @@ export const fetchAllCourses = createAsyncThunk(
   'courses/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
-      // The backend returns an array of courses directly
-      const { data } = await api.get('/courses');
-      return data;
+      const response = await api.get('/courses');
+      const data = response?.data;
+      
+      // Debug logging
+      console.log('Courses API Response:', { 
+        data, 
+        isArray: Array.isArray(data),
+        keys: data && typeof data === 'object' ? Object.keys(data) : null
+      });
+      
+      // Handle both response structures: { data: [...] } or direct array
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data?.data && Array.isArray(data.data)) {
+        return data.data;
+      } else if (data?.courses && Array.isArray(data.courses)) {
+        return data.courses;
+      } else {
+        console.warn('Unexpected API response structure:', data);
+        return [];
+      }
     } catch (error) {
+      console.error('Error fetching courses:', {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+        url: error?.config?.url
+      });
       const msg = error?.response?.data?.message || error?.message || 'Failed to fetch courses';
       return rejectWithValue(msg);
     }
@@ -169,7 +193,8 @@ const courseSlice = createSlice({
       })
       .addCase(fetchAllCourses.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.courses = action.payload; // API returns the array directly
+        // Ensure payload is an array
+        state.courses = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchAllCourses.rejected, (state, action) => {
         state.status = 'failed';

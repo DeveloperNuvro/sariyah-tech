@@ -201,11 +201,23 @@ const CourseSidebar = ({ course, isEnrolled, isOwner, isAuthenticated, user, onE
                 </CardHeader>
                 <CardContent className="p-6">
                     <div className="text-center mb-6">
-                        <p className="text-4xl font-bold text-gray-900 mb-2">
-                            {course.price === 0 ? 'Free' : `৳${course.price}`}
-                        </p>
+                        {course.price === 0 ? (
+                            <p className="text-4xl font-bold text-gray-900 mb-2">Free</p>
+                        ) : course.discountPrice && course.discountPrice < course.price ? (
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-center gap-3">
+                                    <span className="text-4xl font-bold text-gray-900">৳{course.discountPrice}</span>
+                                    <span className="text-2xl text-gray-500 line-through">৳{course.price}</span>
+                                </div>
+                                <div className="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full inline-block">
+                                    Save ৳{course.price - course.discountPrice}
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="text-4xl font-bold text-gray-900 mb-2">৳{course.price}</p>
+                        )}
                         {course.price > 0 && (
-                            <p className="text-sm text-gray-500">One-time payment</p>
+                            <p className="text-sm text-gray-500 mt-2">One-time payment</p>
                         )}
                         {isEnrolled && (
                             <div className="mt-3 inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
