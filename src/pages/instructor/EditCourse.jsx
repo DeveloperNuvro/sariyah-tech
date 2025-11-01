@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
-import { updateCourse, fetchMyCourses } from '../../features/courses/courseSlice';
+import { updateCourse, fetchMyCourses, updateCourseThumbnail } from '../../features/courses/courseSlice';
 import { getAllCoursesAdmin } from '../../features/admin/adminSlice';
 import { 
   BookOpen, 
@@ -15,7 +15,8 @@ import {
   FileText,
   Image,
   Sparkles,
-  Globe
+  Globe,
+  X
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -79,6 +80,8 @@ const EditCourse = () => {
     groupLink: ''
   });
   
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Find the course to edit - check both instructor and admin courses
@@ -108,6 +111,10 @@ const EditCourse = () => {
         thumbnail: course.thumbnail || '',
         groupLink: course.groupLink || ''
       });
+      // Set thumbnail preview if course has thumbnail
+      if (course.thumbnail) {
+        setThumbnailPreview(course.thumbnail);
+      }
     }
   }, [course]);
 
@@ -124,6 +131,38 @@ const EditCourse = () => {
       ...prev,
       category: value
     }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setThumbnailFile(file);
+      setThumbnailPreview(URL.createObjectURL(file));
+      // Clear the thumbnail URL input since we're using a file now
+      setFormData(prev => ({
+        ...prev,
+        thumbnail: ''
+      }));
+    } else {
+      toast.error("Please select a valid image file.");
+    }
+  };
+
+  const handleRemoveThumbnail = () => {
+    setThumbnailFile(null);
+    setThumbnailPreview('');
+    // Restore original thumbnail if it exists
+    if (course?.thumbnail) {
+      setFormData(prev => ({
+        ...prev,
+        thumbnail: course.thumbnail
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        thumbnail: ''
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -157,19 +196,44 @@ const EditCourse = () => {
     setIsLoading(true);
     
     try {
-      // Filter out empty strings and undefined values
+      // If a new thumbnail file is uploaded, use FormData and update thumbnail separately
+      if (thumbnailFile) {
+        // First, update the thumbnail using the dedicated endpoint
+        const thumbnailFormData = new FormData();
+        thumbnailFormData.append('thumbnail', thumbnailFile);
+        
+        const updatedCourse = await dispatch(updateCourseThumbnail({ 
+          courseId, 
+          thumbnailFile: thumbnailFormData 
+        })).unwrap();
+        
+        // Update thumbnail preview with the new URL from response
+        if (updatedCourse?.thumbnail) {
+          setThumbnailPreview(updatedCourse.thumbnail);
+        }
+      }
+
+      // Filter out empty strings and undefined values for other fields
       const filteredFormData = {};
       Object.keys(formData).forEach(key => {
         const value = formData[key];
+        // Skip thumbnail if we uploaded a file (it's already updated above)
+        if (key === 'thumbnail' && thumbnailFile) {
+          return;
+        }
         if (value !== '' && value !== null && value !== undefined) {
           filteredFormData[key] = value;
         }
       });
 
-      await dispatch(updateCourse({ 
-        courseId, 
-        courseData: filteredFormData 
-      })).unwrap();
+      // Update other course data
+      if (Object.keys(filteredFormData).length > 0) {
+        await dispatch(updateCourse({ 
+          courseId, 
+          courseData: filteredFormData 
+        })).unwrap();
+      }
+
       toast.success('Course updated successfully!');
       navigate('/dashboard/instructor');
     } catch (error) {
@@ -486,23 +550,70 @@ const EditCourse = () => {
                   </div>
                 </div>
 
-                {/* Thumbnail URL */}
+                {/* Thumbnail Upload */}
                 <div className="space-y-2">
-                  <Label htmlFor="thumbnail" className="text-sm font-medium text-gray-700">
-                    Thumbnail URL
+                  <Label htmlFor="thumbnail-upload" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <Image className="w-4 h-4 text-gray-400" />
+                    Course Thumbnail
                   </Label>
-                  <div className="relative">
-                    <Image className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                    <Input
-                      id="thumbnail"
-                      name="thumbnail"
-                      type="url"
-                      placeholder="https://example.com/image.jpg"
-                      value={formData.thumbnail}
-                      onChange={handleInputChange}
-                      className="pl-10 border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
-                    />
-                  </div>
+                  {thumbnailPreview ? (
+                    <div className="relative group">
+                      <img 
+                        src={thumbnailPreview} 
+                        alt="Thumbnail Preview" 
+                        className="w-full h-auto aspect-video rounded-xl object-cover border-2 border-gray-200" 
+                      />
+                      <Button 
+                        type="button" 
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 hover:bg-red-600" 
+                        onClick={handleRemoveThumbnail}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Label 
+                      htmlFor="thumbnail-upload" 
+                      className="flex flex-col items-center justify-center w-full h-56 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gradient-to-br from-gray-50 to-gray-100 hover:from-cyan-50 hover:to-pink-50 hover:border-cyan-400 transition-all duration-300 group"
+                    >
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                        <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                          <Upload className="w-8 h-8 text-white" />
+                        </div>
+                        <p className="mb-2 text-sm text-gray-600 font-semibold">
+                          <span className="text-cyan-600">Click to upload</span> or drag and drop
+                        </p>
+                        <p className="text-xs text-gray-500">PNG, JPG, or WEBP (Max 5MB)</p>
+                        {course?.thumbnail && (
+                          <p className="text-xs text-gray-400 mt-2">Current thumbnail will be replaced</p>
+                        )}
+                      </div>
+                      <Input 
+                        id="thumbnail-upload" 
+                        name="thumbnail" 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileChange} 
+                        className="sr-only" 
+                      />
+                    </Label>
+                  )}
+                  {/* Fallback: Manual URL input (optional) */}
+                  {!thumbnailFile && (
+                    <div className="mt-2">
+                      <Input
+                        id="thumbnail-url"
+                        name="thumbnail"
+                        type="url"
+                        placeholder="Or enter thumbnail URL manually..."
+                        value={formData.thumbnail}
+                        onChange={handleInputChange}
+                        className="border-gray-300 focus:border-cyan-500 focus:ring-cyan-500 text-sm"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Submit Button */}

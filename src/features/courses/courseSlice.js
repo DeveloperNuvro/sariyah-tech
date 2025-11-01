@@ -127,6 +127,20 @@ export const updateCourse = createAsyncThunk(
   }
 );
 
+export const updateCourseThumbnail = createAsyncThunk(
+  'courses/updateThumbnail',
+  async ({ courseId, thumbnailFile }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.patch(`/courses/${courseId}/thumbnail`, thumbnailFile, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return data.data; // Return the updated course object
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to update course thumbnail');
+    }
+  }
+);
+
 export const toggleCoursePublishStatus = createAsyncThunk(
   'courses/togglePublish',
   async (courseId, { rejectWithValue }) => {
@@ -246,6 +260,18 @@ const courseSlice = createSlice({
       })
       // Update Course
       .addCase(updateCourse.fulfilled, (state, action) => {
+        const index = state.instructorCourses.findIndex(course => course._id === action.payload._id);
+        if (index !== -1) {
+          state.instructorCourses[index] = action.payload;
+        }
+        // Also update in the main courses array if it exists
+        const courseIndex = state.courses.findIndex(course => course._id === action.payload._id);
+        if (courseIndex !== -1) {
+          state.courses[courseIndex] = action.payload;
+        }
+      })
+      // Update Course Thumbnail
+      .addCase(updateCourseThumbnail.fulfilled, (state, action) => {
         const index = state.instructorCourses.findIndex(course => course._id === action.payload._id);
         if (index !== -1) {
           state.instructorCourses[index] = action.payload;
