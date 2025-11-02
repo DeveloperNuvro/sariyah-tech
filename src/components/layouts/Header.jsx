@@ -36,8 +36,7 @@ import {
   GraduationCap,
   BookOpen,
   Home,
-  Search,
-  Bell,
+  Search, 
   ChevronDown,
   X
 } from 'lucide-react';
@@ -101,6 +100,7 @@ const getRoleBasedNavLinks = (role) => {
                 { to: "/admin/orders", text: "Orders", icon: <ShoppingCart className="h-4 w-4" />, color: "from-orange-500 to-red-500" },
                 { to: "/admin/digital-orders", text: "Digital Orders", icon: <ShoppingCart className="h-4 w-4" />, color: "from-emerald-500 to-green-500" },
                 { to: "/admin/products", text: "Products", icon: <BookMarked className="h-4 w-4" />, color: "from-purple-500 to-violet-500" },
+                { to: "/admin/blogs", text: "Blogs", icon: <BookMarked className="h-4 w-4" />, color: "from-violet-500 to-purple-500" },
                 { to: "/admin/categories", text: "Categories", icon: <BookMarked className="h-4 w-4" />, color: "from-purple-500 to-violet-500" },
             ];
         default:
@@ -113,12 +113,16 @@ const getMainNavLinks = () => [
     { to: "/", text: "Home", icon: <Home className="h-4 w-4" />, color: "from-cyan-500 to-blue-500" },
     { to: "/courses", text: "Courses", icon: <BookOpen className="h-4 w-4" />, color: "from-pink-500 to-rose-500" },
     { to: "/shop", text: "Shop", icon: <ShoppingCart className="h-4 w-4" />, color: "from-emerald-500 to-green-500" },
+    { to: "/blogs", text: "Blog", icon: <BookMarked className="h-4 w-4" />, color: "from-violet-500 to-purple-500" },
 ];
 
 const UserNav = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user } = useSelector((state) => state.auth);
+    const { user: authUser } = useSelector((state) => state.auth);
+    const { user: profileUser } = useSelector((state) => state.profile);
+    // Use profile user if available (more up-to-date), otherwise use auth user
+    const user = profileUser || authUser;
     const [isOpen, setIsOpen] = useState(false);
 
     const handleLogout = () => {
@@ -289,7 +293,10 @@ const UserNav = () => {
 
 const Header = () => {
     const dispatch = useDispatch();
-    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const { isAuthenticated, user: authUser } = useSelector((state) => state.auth);
+    const { user: profileUser } = useSelector((state) => state.profile);
+    // Use profile user if available (more up-to-date), otherwise use auth user
+    const user = profileUser || authUser;
     const { items: cartItems } = useSelector((state) => state.dcart);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -330,7 +337,7 @@ const Header = () => {
             to={link.to}
             onClick={onClick}
             className={({ isActive }) =>
-                `group relative flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+                `group relative flex items-center gap-1 xl:gap-2 px-2 xl:px-4 py-2 rounded-xl transition-all duration-300 flex-shrink-0 ${
                     isActive
                         ? 'bg-white/20 text-white shadow-lg'
                         : 'text-white/80 hover:text-white hover:bg-white/10'
@@ -338,13 +345,13 @@ const Header = () => {
             }
         >
             <motion.div
-                className={`p-2 rounded-lg bg-gradient-to-r ${link.color} text-white`}
+                className={`p-1.5 xl:p-2 rounded-lg bg-gradient-to-r ${link.color} text-white flex-shrink-0`}
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
                 {link.icon}
             </motion.div>
-            <span className="font-medium hidden xl:inline">{link.text}</span>
+            <span className="font-medium hidden xl:inline whitespace-nowrap">{link.text}</span>
             {({ isActive }) => isActive && (
                 <motion.div
                     className="absolute inset-0 bg-white/20 rounded-xl"
@@ -360,31 +367,34 @@ const Header = () => {
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+            className={`sticky top-0 z-50 w-full transition-all duration-300 overflow-hidden ${
                 scrolled
                     ? 'bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-2xl'
                     : 'bg-gradient-to-r from-indigo-900/95 via-purple-900/95 to-pink-900/95 backdrop-blur-md border-b border-white/10'
             }`}
         >
-            <div className="container px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex h-16 md:h-18 items-center justify-between lg:justify-start">
+            <div className="container px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex h-16 md:h-18 items-center justify-between overflow-hidden">
                 
                 {/* --- LEFT SIDE (Logo + Desktop Nav) --- */}
-                <div className="flex items-center">
+                <div className="flex items-center flex-1 min-w-0">
                     {/* --- MOBILE LOGO (visible on mobile) --- */}
-                    <div className="lg:hidden">
+                    <div className="lg:hidden flex-shrink-0">
                         <Logo isMobile={true} />
                     </div>
                     
                     {/* --- DESKTOP NAVIGATION --- */}
-                    <div className="mr-6 hidden lg:flex items-center">
-                        <Logo />
-                        <nav className="flex items-center space-x-2 ml-8 overflow-x-auto whitespace-nowrap max-w-[60vw]">
+                    <div className="hidden lg:flex items-center flex-1 min-w-0">
+                        <div className="flex-shrink-0">
+                            <Logo />
+                        </div>
+                        <nav className="flex items-center space-x-1 xl:space-x-2 ml-4 xl:ml-8 flex-shrink-0 overflow-hidden">
                             {mainNavLinks.map((link, index) => (
                                 <motion.div
                                     key={link.to}
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
+                                    className="flex-shrink-0"
                                 >
                                     <NavLinkComponent link={link} />
                                 </motion.div>
@@ -554,9 +564,9 @@ const Header = () => {
                 </div>
 
                     {/* --- SEARCH BAR (DESKTOP) --- */}
-                    <div className="hidden lg:flex flex-1 items-center justify-center max-w-md mx-8">
+                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 max-w-md mx-2 xl:mx-8">
                         <motion.div
-                            className="relative w-full"
+                            className="relative w-full max-w-full"
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.3 }}
@@ -568,7 +578,7 @@ const Header = () => {
                                     placeholder="Search courses..."
                                     value={searchQuery}
                                     onChange={handleSearchInput}
-                                    className="w-full pl-10 pr-12 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300 backdrop-blur-sm"
+                                    className="w-full pl-10 pr-12 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300 backdrop-blur-sm text-sm"
                                 />
                                 <motion.div
                                     className="absolute right-2 top-1/2 transform -translate-y-1/2"
@@ -588,7 +598,7 @@ const Header = () => {
                     </div>
 
                     {/* --- RIGHT SIDE ACTIONS --- */}
-                    <div className="flex items-center space-x-1 md:space-x-3">
+                    <div className="flex items-center space-x-1 md:space-x-2 xl:space-x-3 flex-shrink-0">
                     {isAuthenticated ? (
                         <>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative">
@@ -602,25 +612,6 @@ const Header = () => {
                                         {cartItems.length}
                                     </span>
                                 )}
-                            </motion.div>
-                            {/* Notification Bell */}
-                            <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="relative"
-                            >
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="text-white hover:text-cyan-400 hover:bg-white/10 transition-all duration-300 relative h-8 w-8 md:h-10 md:w-10"
-                                >
-                                    <Bell className="h-4 w-4 md:h-5 md:w-5" />
-                                    <motion.div
-                                        className="absolute -top-1 -right-1 w-2 h-2 md:w-3 md:h-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-full"
-                                        animate={{ scale: [1, 1.2, 1] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                    />
-                                </Button>
                             </motion.div>
                         <UserNav />
                         </>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { fetchProductBySlug } from '@/features/products/productSlice';
@@ -7,6 +7,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
+import SEO from '@/components/SEO';
+import { generateSEOMeta, generateProductSchema } from '@/utils/seo';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -20,6 +22,37 @@ const ProductDetail = () => {
     dispatch(fetchProductBySlug(slug));
   }, [dispatch, slug]);
 
+  // Hooks must be called before any early returns
+  const price = useMemo(() => {
+    if (!current) return 0;
+    return current.discountPrice > 0 ? current.discountPrice : current.price;
+  }, [current?.discountPrice, current?.price]);
+
+  const seoData = useMemo(() => {
+    if (!current) return null;
+    return generateSEOMeta({
+      title: current.title,
+      description: current.description || `Get ${current.title} - Premium digital product`,
+      keywords: [current.title, ...(current.tags || [])],
+      ogImage: current.thumbnail,
+      type: 'website',
+      structuredData: generateProductSchema(current),
+    });
+  }, [current]);
+
+  const handleAddToCart = useCallback(() => {
+    if (!current) return;
+    if (!isAuthenticated || user?.role !== 'student') {
+      const redirect = `/login?redirect=${encodeURIComponent(location.pathname)}`;
+      navigate(redirect);
+      return;
+    }
+    dispatch(addToCart({ productId: current._id, quantity: 1 }))
+      .unwrap()
+      .then(() => toast.success('Added to cart'))
+      .catch((e) => toast.error(e || 'Failed to add to cart'));
+  }, [isAuthenticated, user, location.pathname, navigate, dispatch, current]);
+
   if (status === 'loading' || !current) return (
     <div className="min-h-[60vh] bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <div className="container mx-auto p-8 text-center text-gray-600">Loading...</div>
@@ -31,10 +64,10 @@ const ProductDetail = () => {
     </div>
   );
 
-  const price = current.discountPrice > 0 ? current.discountPrice : current.price;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <>
+      {seoData && <SEO {...seoData} />}
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <section className="relative py-14 md:py-20 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -right-20 w-80 h-80 bg-gradient-to-br from-cyan-400/15 to-blue-500/15 rounded-full blur-3xl" />
@@ -47,7 +80,7 @@ const ProductDetail = () => {
                 <CardContent className="p-4">
                   <div className="relative overflow-hidden rounded-xl">
                     {current.thumbnail ? (
-                      <img src={current.thumbnail} alt={current.title} className="w-full aspect-square object-cover rounded-xl" />
+                      <img src={current.thumbnail} alt={current.title} className="w-full aspect-square object-cover rounded-xl" loading="lazy" />
                     ) : current.files && current.files.length > 0 && String(current.files[0].format).toLowerCase() === 'pdf' ? (
                       <div className="w-full rounded-xl ring-1 ring-gray-200 overflow-hidden bg-white">
                         <div className="relative" style={{height: "520px"}}>
@@ -77,17 +110,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="mt-6 flex items-center gap-3">
                   <Button
-                    onClick={() => {
-                      if (!isAuthenticated || user?.role !== 'student') {
-                        const redirect = `/login?redirect=${encodeURIComponent(location.pathname)}`;
-                        navigate(redirect);
-                        return;
-                      }
-                      dispatch(addToCart({ productId: current._id, quantity: 1 }))
-                        .unwrap()
-                        .then(() => toast.success('Added to cart'))
-                        .catch((e) => toast.error(e || 'Failed to add to cart'));
-                    }}
+                    onClick={handleAddToCart}
                     className="bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-700 hover:to-fuchsia-700 text-white"
                   >
                     Add to Cart
@@ -104,7 +127,8 @@ const ProductDetail = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 
-export default ProductDetail;
+export default React.memo(ProductDetail);

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
+import { updateUserProfile } from '../profile/profileSlice';
 
 // Get user and token from localStorage if they exist
 const user = JSON.parse(localStorage.getItem('user'));
@@ -176,6 +177,17 @@ const authSlice = createSlice({
           state.token = null;
           state.role = null;
           state.status = 'failed';
+      })
+      
+      // Listen to profile updates to sync auth state
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        if (action.payload && state.user) {
+          // Merge updated profile data with existing auth user
+          state.user = { ...state.user, ...action.payload };
+          state.role = action.payload.role || state.role;
+          // Update localStorage
+          localStorage.setItem('user', JSON.stringify(state.user));
+        }
       });
   },
 });

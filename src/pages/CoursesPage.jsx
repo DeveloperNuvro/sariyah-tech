@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { fetchAllCourses } from '@/features/courses/courseSlice';
 import { fetchAllCategories } from '@/features/categories/categorySlice';
+import SEO from '@/components/SEO';
+import { generateSEOMeta } from '@/utils/seo';
 import { CourseCard } from '@/components/CourseCard';
 import { CourseCardSkeleton } from '@/components/CourseCardSkeleton';
 import { Input } from "@/components/ui/input";
@@ -73,19 +75,23 @@ const CoursesPage = () => {
     const isLoading = courseStatus === 'loading';
     const hasActiveFilters = searchTerm || selectedCategory !== 'all' || sortBy !== 'newest';
 
-    // Debug logging
-    console.log('Courses data:', courses);
-    console.log('Filtered courses:', filteredAndSortedCourses);
-    console.log('Loading state:', isLoading);
+    const seoData = useMemo(() => generateSEOMeta({
+        title: 'Courses',
+        description: 'Explore our comprehensive course library. Learn web development, mobile app development, AI, and more from industry experts.',
+        keywords: ['online courses', 'web development courses', 'programming courses', 'react courses', 'javascript courses', 'tech education'],
+        type: 'website',
+    }), []);
 
-    const clearFilters = () => {
+    const clearFilters = useCallback(() => {
         setSearchTerm('');
         setSelectedCategory('all');
         setSortBy('newest');
-    };
+    }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <>
+            <SEO {...seoData} />
+            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
             {/* Hero Section */}
             <section className="relative py-20 lg:py-32 overflow-hidden">
                 {/* Background Elements */}
@@ -471,7 +477,8 @@ const CoursesPage = () => {
                 )}
             </section>
         </div>
+        </>
     );
 };
 
-export default CoursesPage;
+export default React.memo(CoursesPage);

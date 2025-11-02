@@ -297,7 +297,6 @@ const OrderDetails = () => {
                           className="w-full max-w-md mx-auto rounded-lg border shadow-sm cursor-pointer hover:shadow-lg transition-shadow duration-300"
                           onClick={() => window.open(imageUrl, '_blank')}
                           onError={(e) => {
-                            console.error('Failed to load payment slip image. URL:', imageUrl, 'Original:', order.paymentSlip);
                             e.target.onerror = null; // Prevent infinite loop
                             e.target.src = ''; // Clear src to prevent broken image icon
                             const errorDiv = e.target.nextElementSibling;

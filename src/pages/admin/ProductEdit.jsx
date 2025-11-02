@@ -130,7 +130,6 @@ const ProductEdit = () => {
                               const { data } = await api.get(`/products/${product._id}`);
                               setProduct(data.data);
                             } catch (e) {
-                              console.error(e);
                               alert(e?.response?.data?.message || 'Failed to delete file');
                             }
                           }}>Delete</Button>
@@ -146,7 +145,6 @@ const ProductEdit = () => {
                                 const { data } = await api.get(`/products/${product._id}`);
                                 setProduct(data.data);
                               } catch (err) {
-                                console.error(err);
                                 alert(err?.response?.data?.message || 'Failed to replace file');
                               } finally {
                                 e.target.value = '';

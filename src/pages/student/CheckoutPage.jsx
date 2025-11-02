@@ -139,10 +139,10 @@ const CheckoutPage = () => {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-pink-400/10 to-purple-500/10 rounded-full blur-3xl"></div>
       </div>
 
-      <main className="container mx-auto px-4 py-8 sm:px-6 lg:px-8 relative z-10">
+      <main className="container mx-auto px-4 py-4 sm:py-6 md:py-8 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div 
-          className="flex items-center gap-4 mb-8"
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8"
           variants={animationVariants.fadeInUp}
           initial="hidden"
           animate="show"
@@ -150,25 +150,27 @@ const CheckoutPage = () => {
           <Button
             variant="outline"
             onClick={() => navigate(-1)}
-            className="border-2 border-cyan-400/20 hover:bg-cyan-400/10"
+            className="border-2 border-cyan-400/20 hover:bg-cyan-400/10 w-full sm:w-auto"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
-          <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center">
-            <CreditCard className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
-              Complete Your Purchase
-            </h1>
-            <p className="text-gray-600 text-lg">
-              Secure payment for {currentCourse.title}
-            </p>
+          <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full sm:w-auto">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent leading-tight">
+                Complete Your Purchase
+              </h1>
+              <p className="text-gray-600 text-sm sm:text-base md:text-lg mt-1 line-clamp-2">
+                Secure payment for {currentCourse.title}
+              </p>
+            </div>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Left Column: Payment Form */}
           <motion.div
             variants={animationVariants.container}
@@ -185,14 +187,14 @@ const CheckoutPage = () => {
                     Payment Instructions
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4" />
+                <CardContent className="p-4 sm:p-6">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                      <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2 text-sm sm:text-base">
+                        <CheckCircle className="w-4 h-4 flex-shrink-0" />
                         How to Pay:
                       </h4>
-                      <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+                      <ol className="text-xs sm:text-sm text-blue-800 space-y-1 list-decimal list-inside">
                         <li>Send money to the number below using your selected payment method</li>
                         <li>Copy the transaction ID from your payment app</li>
                         <li>Fill in your payment details below</li>
@@ -200,69 +202,69 @@ const CheckoutPage = () => {
                       </ol>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-gray-900">Bkash</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+                        <div className="flex items-center justify-between mb-2 gap-2">
+                          <span className="font-medium text-gray-900 text-sm sm:text-base">Bkash</span>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => copyToClipboard(paymentNumbers.bkash)}
-                            className="h-6 px-2 text-xs"
+                            className="h-7 sm:h-8 px-2 sm:px-3 text-xs flex-shrink-0 cursor-pointer"
                           >
-                            <Copy className="w-3 h-3 mr-1" />
-                            Copy
+                            <Copy className="w-3 h-3 sm:mr-1" />
+                            <span className="hidden sm:inline">Copy</span>
                           </Button>
                         </div>
-                        <p className="text-lg font-mono font-bold text-gray-900">{paymentNumbers.bkash}</p>
+                        <p className="text-base sm:text-lg font-mono font-bold text-gray-900 break-all">{paymentNumbers.bkash}</p>
                       </div>
                       
-                      <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-gray-900">Nagad</span>
+                      <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+                        <div className="flex items-center justify-between mb-2 gap-2">
+                          <span className="font-medium text-gray-900 text-sm sm:text-base">Nagad</span>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => copyToClipboard(paymentNumbers.nagad)}
-                            className="h-6 px-2 text-xs"
+                            className="h-7 sm:h-8 px-2 sm:px-3 text-xs flex-shrink-0 cursor-pointer"
                           >
-                            <Copy className="w-3 h-3 mr-1" />
-                            Copy
+                            <Copy className="w-3 h-3 sm:mr-1" />
+                            <span className="hidden sm:inline">Copy</span>
                           </Button>
                         </div>
-                        <p className="text-lg font-mono font-bold text-gray-900">{paymentNumbers.nagad}</p>
+                        <p className="text-base sm:text-lg font-mono font-bold text-gray-900 break-all">{paymentNumbers.nagad}</p>
                       </div>
                       
-                      <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-gray-900">Rocket</span>
+                      <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+                        <div className="flex items-center justify-between mb-2 gap-2">
+                          <span className="font-medium text-gray-900 text-sm sm:text-base">Rocket</span>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => copyToClipboard(paymentNumbers.rocket)}
-                            className="h-6 px-2 text-xs"
+                            className="h-7 sm:h-8 px-2 sm:px-3 text-xs flex-shrink-0 cursor-pointer"
                           >
-                            <Copy className="w-3 h-3 mr-1" />
-                            Copy
+                            <Copy className="w-3 h-3 sm:mr-1" />
+                            <span className="hidden sm:inline">Copy</span>
                           </Button>
                         </div>
-                        <p className="text-lg font-mono font-bold text-gray-900">{paymentNumbers.rocket}</p>
+                        <p className="text-base sm:text-lg font-mono font-bold text-gray-900 break-all">{paymentNumbers.rocket}</p>
                       </div>
                       
-                      <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-gray-900">Cellfin</span>
+                      <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+                        <div className="flex items-center justify-between mb-2 gap-2">
+                          <span className="font-medium text-gray-900 text-sm sm:text-base">Cellfin</span>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => copyToClipboard(paymentNumbers.cellfin)}
-                            className="h-6 px-2 text-xs"
+                            className="h-7 sm:h-8 px-2 sm:px-3 text-xs flex-shrink-0 cursor-pointer"
                           >
-                            <Copy className="w-3 h-3 mr-1" />
-                            Copy
+                            <Copy className="w-3 h-3 sm:mr-1" />
+                            <span className="hidden sm:inline">Copy</span>
                           </Button>
                         </div>
-                        <p className="text-lg font-mono font-bold text-gray-900">{paymentNumbers.cellfin}</p>
+                        <p className="text-base sm:text-lg font-mono font-bold text-gray-900 break-all">{paymentNumbers.cellfin}</p>
                       </div>
                     </div>
                   </div>
@@ -279,8 +281,8 @@ const CheckoutPage = () => {
                     Payment Details
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                <CardContent className="p-4 sm:p-6">
+                  <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                     {/* Payment Method */}
                     <div className="space-y-2">
                       <Label htmlFor="paymentMethod" className="text-sm font-medium text-gray-700">
@@ -290,7 +292,7 @@ const CheckoutPage = () => {
                         value={paymentDetails.paymentMethod} 
                         onValueChange={(value) => setPaymentDetails({...paymentDetails, paymentMethod: value})}
                       >
-                        <SelectTrigger className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-12">
+                        <SelectTrigger className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-11 sm:h-12 text-sm sm:text-base">
                           <SelectValue placeholder="Select payment method" />
                         </SelectTrigger>
                         <SelectContent className="bg-white border border-gray-200 rounded-xl">
@@ -313,7 +315,7 @@ const CheckoutPage = () => {
                         placeholder="Enter your payment number"
                         value={paymentDetails.paymentNumber}
                         onChange={(e) => setPaymentDetails({...paymentDetails, paymentNumber: e.target.value})}
-                        className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-12"
+                        className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-11 sm:h-12 text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -329,7 +331,7 @@ const CheckoutPage = () => {
                         placeholder="Enter transaction ID from your payment app"
                         value={paymentDetails.transactionId}
                         onChange={(e) => setPaymentDetails({...paymentDetails, transactionId: e.target.value})}
-                        className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-12"
+                        className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-11 sm:h-12 text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -345,7 +347,7 @@ const CheckoutPage = () => {
                           type="file"
                           accept="image/*"
                           onChange={(e) => setPaymentDetails({...paymentDetails, paymentSlip: e.target.files[0]})}
-                          className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-12"
+                          className="border-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-xl h-11 sm:h-12 text-sm sm:text-base file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                           required
                         />
                         <p className="text-xs text-gray-500">
@@ -358,7 +360,7 @@ const CheckoutPage = () => {
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold rounded-xl h-12 text-lg"
+                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold rounded-xl h-11 sm:h-12 text-base sm:text-lg"
                     >
                       {isLoading ? (
                         <>
@@ -392,19 +394,19 @@ const CheckoutPage = () => {
                   Order Summary
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-6">
+              <CardContent className="p-4 sm:p-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Course Info */}
-                  <div className="flex gap-4">
+                  <div className="flex gap-3 sm:gap-4">
                     <img 
                       src={currentCourse.thumbnail} 
                       alt={currentCourse.title}
-                      className="w-20 h-20 object-cover rounded-lg"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg flex-shrink-0"
                     />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{currentCourse.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{currentCourse.instructor?.name}</p>
-                      <div className="flex items-center gap-2">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base line-clamp-2">{currentCourse.title}</h3>
+                      <p className="text-xs sm:text-sm text-gray-600 mb-2">{currentCourse.instructor?.name}</p>
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
                           {currentCourse.category?.name}
                         </span>
@@ -413,47 +415,47 @@ const CheckoutPage = () => {
                   </div>
 
                   {/* Pricing */}
-                  <div className="border-t border-gray-200 pt-4">
+                  <div className="border-t border-gray-200 pt-3 sm:pt-4">
                     <div className="space-y-2">
                       {currentCourse.discountPrice && currentCourse.discountPrice < currentCourse.price ? (
                         <div className="space-y-1">
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center text-sm sm:text-base">
                             <span className="text-gray-600">Course Price:</span>
                             <span className="text-gray-500 line-through">৳{currentCourse.price}</span>
                           </div>
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center text-sm sm:text-base">
                             <span className="text-gray-600">Discount Price:</span>
-                            <span className="text-lg font-bold text-green-600">৳{currentCourse.discountPrice}</span>
+                            <span className="text-base sm:text-lg font-bold text-green-600">৳{currentCourse.discountPrice}</span>
                           </div>
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center text-sm sm:text-base">
                             <span className="text-gray-600">You Save:</span>
                             <span className="text-green-600 font-semibold">৳{currentCourse.price - currentCourse.discountPrice}</span>
                           </div>
                         </div>
                       ) : (
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center text-sm sm:text-base">
                           <span className="text-gray-600">Course Price:</span>
-                          <span className="text-lg font-bold text-gray-900">৳{currentCourse.price}</span>
+                          <span className="text-base sm:text-lg font-bold text-gray-900">৳{currentCourse.price}</span>
                         </div>
                       )}
                     </div>
                   </div>
 
                   {/* Total */}
-                  <div className="border-t border-gray-200 pt-4">
+                  <div className="border-t border-gray-200 pt-3 sm:pt-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-semibold text-gray-900">Total:</span>
-                      <span className="text-2xl font-bold text-gray-900">৳{currentPrice}</span>
+                      <span className="text-base sm:text-lg font-semibold text-gray-900">Total:</span>
+                      <span className="text-xl sm:text-2xl font-bold text-gray-900">৳{currentPrice}</span>
                     </div>
                   </div>
 
                   {/* Security Notice */}
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-green-600 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-green-900 mb-1">Secure Payment</h4>
-                        <p className="text-sm text-green-800">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <h4 className="font-semibold text-green-900 mb-1 text-sm sm:text-base">Secure Payment</h4>
+                        <p className="text-xs sm:text-sm text-green-800">
                           Your payment information is encrypted and secure. We'll verify your payment and activate your course access.
                         </p>
                       </div>
@@ -461,23 +463,23 @@ const CheckoutPage = () => {
                   </div>
 
                   {/* Processing Time */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-blue-600 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-blue-900 mb-1">Processing Time</h4>
-                        <p className="text-sm text-blue-800">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <h4 className="font-semibold text-blue-900 mb-1 text-sm sm:text-base">Processing Time</h4>
+                        <p className="text-xs sm:text-sm text-blue-800">
                           Your enrollment will be processed within 24 hours after payment verification.
                         </p>
                       </div>
-          </div>
-        </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </motion.div>
-      </div>
-    </main>
+        </div>
+      </main>
     </div>
   );
 };

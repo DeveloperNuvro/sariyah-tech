@@ -24,7 +24,6 @@ const getYoutubeVideoId = (url) => {
       return urlObj.pathname.slice(1);
     }
   } catch (error) {
-    console.error("Invalid URL provided to getYoutubeVideoId:", url);
     return null;
   }
   

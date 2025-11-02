@@ -87,20 +87,7 @@ const AdminDashboard = () => {
     dispatch(getDashboardStats());
   }, [dispatch]);
 
-  // Debug: Log dashboard stats to see the data structure
-  useEffect(() => {
-    if (dashboardStats?.recent?.courses) {
-      console.log('Dashboard Stats - Recent Courses:', dashboardStats.recent.courses);
-      dashboardStats.recent.courses.forEach((course, index) => {
-        console.log(`Course ${index + 1}:`, {
-          title: course.title,
-          isPublished: course.isPublished,
-          isEnded: course.isEnded,
-          createdAt: course.createdAt
-        });
-      });
-    }
-  }, [dashboardStats]);
+  // Dashboard stats loaded and processed
 
   if (status === 'loading') {
     return (

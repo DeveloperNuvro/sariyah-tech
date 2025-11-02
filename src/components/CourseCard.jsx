@@ -46,7 +46,7 @@ export const CourseCard = ({ course }) => {
                     <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                             <Avatar className="h-6 w-6">
-                                <AvatarImage src={course.instructor?.avatar || course.instructor?.avatarUrl} />
+                                <AvatarImage src={course.instructor?.avatar} />
                                 <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white text-xs font-semibold">
                                     {instructorInitials}
                                 </AvatarFallback>

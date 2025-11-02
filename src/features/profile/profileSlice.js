@@ -30,7 +30,7 @@ export const updateUserProfile = createAsyncThunk(
       
       const config = {
         headers: isFormData ? {
-          'Content-Type': 'multipart/form-data',
+          // Don't set Content-Type for FormData - let axios set it with boundary
         } : {
           'Content-Type': 'application/json',
         }
@@ -39,7 +39,8 @@ export const updateUserProfile = createAsyncThunk(
       const { data } = await api.put('/users/profile', profileData, config);
       return data.user;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update profile');
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || 'Failed to update profile';
+      return rejectWithValue(errorMessage);
     }
   }
 );

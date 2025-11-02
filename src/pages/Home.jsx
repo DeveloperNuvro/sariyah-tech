@@ -1,8 +1,10 @@
 // src/pages/Home.jsx
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
+import { generateSEOMeta, generateOrganizationSchema } from '../utils/seo';
 
 // Shadcn UI Components
 import { Button } from "@/components/ui/button";
@@ -444,7 +446,7 @@ const StatsSection = () => {
     );
 };
 
-const FeaturedCoursesSection = () => {
+const FeaturedCoursesSection = React.memo(() => {
     const dispatch = useDispatch();
     const { courses, status, error } = useSelector((state) => state.courses);
     const [searchTerm, setSearchTerm] = useState('');
@@ -457,14 +459,21 @@ const FeaturedCoursesSection = () => {
         dispatch(fetchAllCourses());
     }, [dispatch, status, courses.length]);
 
-    // Filter courses based on search term
-    const filteredCourses = courses?.filter(course => 
-        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+    // Filter courses based on search term - memoized
+    const filteredCourses = useMemo(() => {
+        if (!courses || courses.length === 0) return [];
+        if (!searchTerm) return courses.slice(0, 6);
+        
+        return courses.filter(course => 
+            course.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            course.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            course.category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        ).slice(0, 6);
+    }, [courses, searchTerm]);
 
-    const featuredCourses = filteredCourses.slice(0, 6);
+    const handleSearchChange = useCallback((e) => {
+        setSearchTerm(e.target.value);
+    }, []);
 
     return (
         <section className="py-20 lg:py-32 bg-gradient-to-br from-indigo-50 via-white to-purple-50 relative overflow-hidden">
@@ -510,7 +519,7 @@ const FeaturedCoursesSection = () => {
                         <Input
                             placeholder="Search courses, categories, or skills..."
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={handleSearchChange}
                             className="pl-12 pr-4 py-4 bg-white/80 backdrop-blur-sm border-2 border-cyan-400/20 focus:border-pink-400/40 shadow-lg hover:shadow-xl transition-all duration-300 text-lg rounded-xl"
                         />
                         {searchTerm && (
@@ -573,7 +582,7 @@ const FeaturedCoursesSection = () => {
                             </Button>
                         </div>
                     </motion.div>
-                ) : featuredCourses.length > 0 ? (
+                ) : filteredCourses.length > 0 ? (
                     <motion.div 
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                         initial="hidden"
@@ -581,7 +590,7 @@ const FeaturedCoursesSection = () => {
                         viewport={{ once: true, amount: 0.3 }}
                         variants={animationVariants.container}
                     >
-                        {featuredCourses.map((course, index) => (
+                        {filteredCourses.map((course, index) => (
                             <motion.div key={course._id} variants={animationVariants.fadeInUp}>
                                 <CourseCard course={course} />
                             </motion.div>
@@ -619,7 +628,7 @@ const FeaturedCoursesSection = () => {
             </div>
         </section>
     );
-};
+});
 
 const WhyChooseUsSection = () => {
     const features = [
@@ -918,20 +927,31 @@ const Footer = () => {
 };
 
 const Home = () => {
+    const seoData = useMemo(() => generateSEOMeta({
+        title: 'Home',
+        description: 'Premier technology development and education company. Build cutting-edge software, websites, mobile apps, and AI agents. Learn from industry experts.',
+        keywords: ['web development', 'mobile apps', 'AI agents', 'software development', 'online courses', 'programming', 'tech education'],
+        type: 'website',
+        structuredData: generateOrganizationSchema(),
+    }), []);
+
     return (
-        <div className="bg-white text-gray-900 font-sans antialiased min-h-screen">
-            <main className="relative">
-                <HeroSection />
-                <ServicesSection />
-                <StatsSection />
-                <FeaturedCoursesSection />
-                <WhyChooseUsSection />
-                <TestimonialsSection />
-                <CTASection />
-            </main>
-            <Footer />
-        </div>
+        <>
+            <SEO {...seoData} />
+            <div className="bg-white text-gray-900 font-sans antialiased min-h-screen">
+                <main className="relative">
+                    <HeroSection />
+                    <ServicesSection />
+                    <StatsSection />
+                    <FeaturedCoursesSection />
+                    <WhyChooseUsSection />
+                    <TestimonialsSection />
+                    <CTASection />
+                </main>
+                <Footer />
+            </div>
+        </>
     );
 };
 
-export default Home;
+export default React.memo(Home);

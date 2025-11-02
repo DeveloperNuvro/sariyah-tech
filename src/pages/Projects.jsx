@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import SEO from '../components/SEO';
+import { generateSEOMeta } from '../utils/seo';
 
 // Shadcn UI Components
 import { Button } from "@/components/ui/button";
@@ -130,17 +132,20 @@ const Projects = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    document.title = 'Our Services - SariyahTech';
-  }, []);
+  const seoData = useMemo(() => generateSEOMeta({
+    title: 'Projects & Services',
+    description: 'Hire Sariyah Tech for custom software development, web apps, mobile apps, AI agents, and more. We deliver cutting-edge solutions for your business.',
+    keywords: ['software development', 'web development services', 'mobile app development', 'AI agent development', 'custom software', 'tech services'],
+    type: 'website',
+  }), []);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-  };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -209,7 +214,9 @@ const Projects = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <>
+      <SEO {...seoData} />
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       {/* Hero Section */}
       <section className="relative w-full py-20 md:py-32 overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
         {/* Animated Background */}
@@ -449,8 +456,9 @@ const Projects = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 
-export default Projects;
+export default React.memo(Projects);
 

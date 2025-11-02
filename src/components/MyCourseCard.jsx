@@ -270,7 +270,7 @@ export const MyCourseCard = ({ order, enrollmentDetails, certificate }) => {
                 <h3 className="text-xl font-bold text-gray-900 line-clamp-2 leading-tight">{order.course.title}</h3>
                 <div className="flex items-center gap-3 mt-2">
                   <Avatar className="h-6 w-6 border border-gray-200">
-                    <AvatarImage src={order.course.instructor?.avatar || order.course.instructor?.avatarUrl} />
+                    <AvatarImage src={order.course.instructor?.avatar} />
                     <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white text-xs font-semibold">
                       {order.course.instructor?.name?.charAt(0)?.toUpperCase() || 'U'}
                     </AvatarFallback>

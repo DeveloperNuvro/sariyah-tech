@@ -114,7 +114,7 @@ const OrderManagement = () => {
       setSelectedOrder(orderId);
       setIsOrderDetailsOpen(true);
     } catch (error) {
-      console.error('Failed to fetch order details:', error);
+      // Error handled by Redux state
     }
   };
 
@@ -144,7 +144,7 @@ const OrderManagement = () => {
         status: statusFilter 
       }));
     } catch (error) {
-      console.error('Failed to update order:', error);
+      // Error handled by Redux state
     }
   };
 
@@ -158,7 +158,7 @@ const OrderManagement = () => {
         status: statusFilter 
       }));
     } catch (error) {
-      console.error('Failed to delete order:', error);
+      // Error handled by Redux state
     }
   };
 
@@ -701,9 +701,8 @@ const OrderManagement = () => {
                               alt="Payment Slip"
                               className="w-full max-w-md mx-auto rounded-lg border shadow-sm cursor-pointer hover:shadow-lg transition-shadow duration-300"
                               onClick={() => window.open(imageUrl, '_blank')}
-                              onError={(e) => {
-                                console.error('Failed to load payment slip image. URL:', imageUrl, 'Original:', selectedOrderData.paymentSlip);
-                                e.target.onerror = null; // Prevent infinite loop
+                          onError={(e) => {
+                            e.target.onerror = null; // Prevent infinite loop
                                 e.target.src = ''; // Clear src to prevent broken image icon
                                 const errorDiv = e.target.nextElementSibling;
                                 if (errorDiv) {

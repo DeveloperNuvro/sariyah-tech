@@ -1,52 +1,62 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast'; // For user feedback
+import { Toaster } from 'react-hot-toast';
 
-// Page Imports
-import HomePage from './pages/Home';
-import CourseDetailPage from './pages/CourseDetail';
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/Register';
-import VerifyEmail from './pages/auth/VerifyEmail';
-import CheckoutPage from './pages/student/CheckoutPage';
-import StudentDashboard from './pages/student/StudentDashboard';
-import CourseLessonPage from './pages/student/CourseLesson';
-import OrderDetails from './pages/student/OrderDetails';
-import InstructorDashboard from './pages/instructor/InstructorDashboard';
-import CreateCoursePage from './pages/instructor/CreateCourse';
-import EditCoursePage from './pages/instructor/EditCourse';
-import AddLessonPage from './pages/instructor/AddLessonPage';
-import PaymentManagementPage from './pages/admin/PaymentManagementPage';
+// Lazy load pages for code splitting and better performance
+const HomePage = lazy(() => import('./pages/Home'));
+const CourseDetailPage = lazy(() => import('./pages/CourseDetail'));
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/auth/Register'));
+const VerifyEmail = lazy(() => import('./pages/auth/VerifyEmail'));
+const CheckoutPage = lazy(() => import('./pages/student/CheckoutPage'));
+const StudentDashboard = lazy(() => import('./pages/student/StudentDashboard'));
+const CourseLessonPage = lazy(() => import('./pages/student/CourseLesson'));
+const OrderDetails = lazy(() => import('./pages/student/OrderDetails'));
+const InstructorDashboard = lazy(() => import('./pages/instructor/InstructorDashboard'));
+const CreateCoursePage = lazy(() => import('./pages/instructor/CreateCourse'));
+const EditCoursePage = lazy(() => import('./pages/instructor/EditCourse'));
+const AddLessonPage = lazy(() => import('./pages/instructor/AddLessonPage'));
+const PaymentManagementPage = lazy(() => import('./pages/admin/PaymentManagementPage'));
 
 // Route Protection
 import { ProtectedRoute, StudentRoute, InstructorRoute, AdminRoute } from './routes/ProtectedRoute';
 import Header from './components/layouts/Header';
-import ManageQuizPage from './pages/instructor/ManageQuizPage';
-import QuizResultsPage from './pages/instructor/QuizResultsPage';
-import CategoryManagement from './pages/admin/CategoryManagement';
-import InstructorRegisterPage from './pages/auth/InstructorRegisterPage';
-import CoursesPage from './pages/CoursesPage';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import UserManagement from './pages/admin/UserManagement';
-import CourseManagement from './pages/admin/CourseManagement';
-import LessonManagement from './pages/admin/LessonManagement';
-import ReviewManagement from './pages/admin/ReviewManagement';
-import OrderManagement from './pages/admin/OrderManagement';
-import DigitalOrdersAdminPage from './pages/admin/DigitalOrders';
-import ProductsList from './pages/admin/ProductsList';
-import ProductCreate from './pages/admin/ProductCreate';
-import ProductEdit from './pages/admin/ProductEdit';
-import ProfileSettings from './pages/ProfileSettings';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
-import Cart from './pages/Cart';
-import DigitalOrderDetails from './pages/DigitalOrderDetails';
-import MyDigitalOrders from './pages/MyDigitalOrders';
-import TermsOfService from './pages/TermsOfService';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Projects from './pages/Projects';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import ResetPassword from './pages/auth/ResetPassword';
+
+// Lazy load remaining pages
+const ManageQuizPage = lazy(() => import('./pages/instructor/ManageQuizPage'));
+const QuizResultsPage = lazy(() => import('./pages/instructor/QuizResultsPage'));
+const CategoryManagement = lazy(() => import('./pages/admin/CategoryManagement'));
+const InstructorRegisterPage = lazy(() => import('./pages/auth/InstructorRegisterPage'));
+const CoursesPage = lazy(() => import('./pages/CoursesPage'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
+const CourseManagement = lazy(() => import('./pages/admin/CourseManagement'));
+const LessonManagement = lazy(() => import('./pages/admin/LessonManagement'));
+const ReviewManagement = lazy(() => import('./pages/admin/ReviewManagement'));
+const OrderManagement = lazy(() => import('./pages/admin/OrderManagement'));
+const DigitalOrdersAdminPage = lazy(() => import('./pages/admin/DigitalOrders'));
+const ProductsList = lazy(() => import('./pages/admin/ProductsList'));
+const ProductCreate = lazy(() => import('./pages/admin/ProductCreate'));
+const ProductEdit = lazy(() => import('./pages/admin/ProductEdit'));
+const ProfileSettings = lazy(() => import('./pages/ProfileSettings'));
+const Products = lazy(() => import('./pages/Products'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const Cart = lazy(() => import('./pages/Cart'));
+const DigitalOrderDetails = lazy(() => import('./pages/DigitalOrderDetails'));
+const MyDigitalOrders = lazy(() => import('./pages/MyDigitalOrders'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const Projects = lazy(() => import('./pages/Projects'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
+const Blogs = lazy(() => import('./pages/Blogs'));
+const BlogDetail = lazy(() => import('./pages/BlogDetail'));
+const BlogsList = lazy(() => import('./pages/admin/BlogsList'));
+const BlogCreate = lazy(() => import('./pages/admin/BlogCreate'));
+const BlogEdit = lazy(() => import('./pages/admin/BlogEdit'));
+
+// Import beautiful page loader
+import PageLoader from './components/PageLoader';
 
 
 function App() {
@@ -54,9 +64,8 @@ function App() {
   return (
     <Router>
       <Toaster position="top-center" reverseOrder={false} />
-      {/* A Header component would go here */}
       <Header />
-      <main>
+      <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
@@ -74,6 +83,8 @@ function App() {
           {/* Digital shop routes */}
           <Route path="/shop" element={<Products />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
           <Route path="/digital-orders/:orderId" element={<ProtectedRoute><DigitalOrderDetails /></ProtectedRoute>} />
           <Route path="/dashboard/digital-orders" element={<ProtectedRoute><MyDigitalOrders /></ProtectedRoute>} />
@@ -105,13 +116,15 @@ function App() {
           <Route path="/admin/products" element={<AdminRoute><ProductsList /></AdminRoute>} />
           <Route path="/admin/products/new" element={<AdminRoute><ProductCreate /></AdminRoute>} />
           <Route path="/admin/products/:id/edit" element={<AdminRoute><ProductEdit /></AdminRoute>} />
+          <Route path="/admin/blogs" element={<AdminRoute><BlogsList /></AdminRoute>} />
+          <Route path="/admin/blogs/new" element={<AdminRoute><BlogCreate /></AdminRoute>} />
+          <Route path="/admin/blogs/:id/edit" element={<AdminRoute><BlogEdit /></AdminRoute>} />
           <Route path="/admin/payments" element={<AdminRoute><PaymentManagementPage /></AdminRoute>} />
           <Route path="/admin/categories" element={<AdminRoute><CategoryManagement /></AdminRoute>} />
           {/* A 404 Not Found component would go here */}
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
-      </main>
-      {/* A Footer component would go here */}
+      </Suspense>
     </Router>
   );
 }

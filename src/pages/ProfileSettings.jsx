@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateUserProfile, changePassword, getUserProfile } from '../features/profile/profileSlice';
+import { loadUser } from '../features/auth/authSlice';
 
 // Animation variants
 const animationVariants = {
@@ -123,7 +124,9 @@ const ProfileSettings = () => {
     }
 
     try {
-      await dispatch(updateUserProfile(formData)).unwrap();
+      const updatedUser = await dispatch(updateUserProfile(formData)).unwrap();
+      // Refresh auth state to sync user data (including avatar) across the app
+      await dispatch(loadUser());
       toast.success('Profile updated successfully!');
       setSelectedFile(null);
     } catch (error) {

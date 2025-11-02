@@ -15,6 +15,7 @@ import profileReducer from '../features/profile/profileSlice';
 import productReducer from '../features/products/productSlice';
 import dcartReducer from '../features/dcart/cartSlice';
 import dorderReducer from '../features/dorders/dorderSlice';
+import blogReducer from '../features/blogs/blogSlice';
 
 export const store = configureStore({
   reducer: {
@@ -34,6 +35,7 @@ export const store = configureStore({
     products: productReducer,
     dcart: dcartReducer,
     dorders: dorderReducer,
+    blogs: blogReducer,
   },
   // Adding middleware is good practice for production, but not strictly needed for this setup to work
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

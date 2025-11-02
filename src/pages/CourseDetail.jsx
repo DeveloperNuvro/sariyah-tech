@@ -1,10 +1,12 @@
 // src/pages/CourseDetailPage.jsx
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import SEO from '../components/SEO';
+import { generateSEOMeta, generateCourseSchema } from '../utils/seo';
 
 // Redux Imports
 import { fetchCourseBySlug, clearCurrentCourse } from '../features/courses/courseSlice';
@@ -52,7 +54,7 @@ const formatTextContent = (text) => {
         // Line breaks
         .replace(/\n/g, '<br>')
         // Lists - * item or - item
-        .replace(/^[\s]*[\*\-] (.*$)/gim, '<li class="ml-4 mb-1">$1</li>')
+        .replace(/^[\s]*[*\-] (.*$)/gim, '<li class="ml-4 mb-1">$1</li>')
         // Numbered lists
         .replace(/^[\s]*\d+\. (.*$)/gim, '<li class="ml-4 mb-1">$1</li>');
 
@@ -134,7 +136,9 @@ const CourseSidebar = ({ course, isEnrolled, isOwner, isAuthenticated, user, onE
             try {
                 const { data } = await api.get(`/courses/${course._id}/group-link`);
                 if (!cancelled) setGroupLink(data?.data?.groupLink || '');
-            } catch {}
+            } catch {
+                // Error loading group link - silently fail
+            }
         }
         load();
         return () => { cancelled = true; };
@@ -300,7 +304,6 @@ const CourseDetailPage = () => {
     const { status: orderStatus } = useSelector((state) => state.orders);
 
     // Debug: Log the course data to see what's coming from backend
-    console.log('Course data from backend:', currentCourse);
 
     const handleEnroll = () => {
         if (!isAuthenticated) {
@@ -317,7 +320,7 @@ const CourseDetailPage = () => {
                     dispatch(fetchMyEnrollments());
                 })
                 .catch(err => {
-                    console.error('Enrollment error:', err);
+                    // Enrollment error handled by toast
                     toast.error(`Enrollment failed: ${err.message || err}`);
                 });
         } else {
@@ -331,16 +334,24 @@ const CourseDetailPage = () => {
         return () => { dispatch(clearCurrentCourse()); };
     }, [slug, dispatch, isAuthenticated]);
 
-    const isEnrolled = myEnrollments.some(e => e.course?._id === currentCourse?._id);
+    const isEnrolled = useMemo(() => 
+        myEnrollments.some(e => e.course?._id === currentCourse?._id),
+        [myEnrollments, currentCourse?._id]
+    );
     const isOwner = user?._id === currentCourse?.instructor?._id;
     const isEnrolling = orderStatus === 'loading';
     
-    // Debug: Log enrollment status
-    console.log('Enrollment status:', { 
-        isEnrolled, 
-        courseId: currentCourse?._id, 
-        myEnrollments: myEnrollments.map(e => ({ courseId: e.course?._id, courseTitle: e.course?.title }))
-    });
+    const seoData = useMemo(() => {
+        if (!currentCourse) return null;
+        return generateSEOMeta({
+            title: currentCourse.title,
+            description: currentCourse.shortDescription || currentCourse.description || `Learn ${currentCourse.title} from industry experts`,
+            keywords: [currentCourse.title, currentCourse.category?.name, 'online course', 'programming'],
+            ogImage: currentCourse.thumbnail,
+            type: 'website',
+            structuredData: generateCourseSchema(currentCourse),
+        });
+    }, [currentCourse]);
 
     if (status === 'loading' || status === 'idle' || !currentCourse) {
         return <CourseDetailSkeleton />;
@@ -349,7 +360,9 @@ const CourseDetailPage = () => {
     const instructorInitials = currentCourse.instructor?.name.split(' ').map(n => n[0]).join('') || 'U';
 
     return (
-        <main className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
+        <>
+            {seoData && <SEO {...seoData} />}
+            <main className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
             {/* Hero Section */}
             <section className="relative w-full py-20 lg:py-32 overflow-hidden">
                 {/* Background Elements */}
@@ -389,7 +402,7 @@ const CourseDetailPage = () => {
                             variants={animationVariants.fadeInUp}
                         >
                             <Avatar className="w-12 h-12 border-2 border-cyan-400/20">
-                                <AvatarImage src={currentCourse.instructor.avatarUrl} />
+                                <AvatarImage src={currentCourse.instructor?.avatar} />
                                 <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-pink-500 text-white">
                                     {instructorInitials}
                                 </AvatarFallback>
@@ -549,7 +562,8 @@ const CourseDetailPage = () => {
                 </div>
             </section>
         </main>
+        </>
     );
 };
 
-export default CourseDetailPage;
+export default React.memo(CourseDetailPage);

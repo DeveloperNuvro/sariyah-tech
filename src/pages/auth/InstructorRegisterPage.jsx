@@ -103,7 +103,7 @@ const InstructorRegisterPage = () => {
         // No need to navigate here, the useEffect will handle it.
       })
       .catch((err) => {
-        console.log(err);
+        // Error handled by toast
         // Error is already handled by the toast in useEffect
       });
   };
